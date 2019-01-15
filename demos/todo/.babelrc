@@ -1,0 +1,25 @@
+{
+  "plugins": [
+    "transform-decorators-legacy",
+    "react-hot-loader/babel",
+    ["transform-runtime", {
+      "helpers": false,
+      "polyfill": true,
+      "regenerator": true,
+      "moduleName": "babel-runtime"
+    }],
+    ["import", { "libraryName": "antd", "libraryDirectory": "lib", "style": "css"}, "ant"],
+    ["import", { "libraryName": "ant-design-pro", "libraryDirectory": "lib", "style": "css"}, "ant-design-pro"]
+  ],
+  "presets": [
+    ["env", {
+      "modules": false,
+      "debug": false,
+      "targets": {
+        "browsers": ["> 1%", "last 2 versions", "ie <= 8"]
+      }
+    }],
+    "stage-0",
+    "react"
+  ]
+}

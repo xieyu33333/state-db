@@ -1,0 +1,105 @@
+{
+    "name": "zhidao-react-seed",
+    "version": "1.0.0",
+    "description": "蘑菇智行B端React种子工程",
+    "main": "index.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "scripts": {
+        "create": "node ./builder/create.js",
+        "start": "node ./builder/start.js dev",
+        "rd": "node ./builder/start.js rd",
+        "qa": "node ./builder/start.js qa",
+        "online": "node ./builder/start.js online",
+        "build": "node ./builder/start.js online",
+        "commit": "git cz && git-cz",
+        "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md && conventional-changelog -p @baidu/befe -i CHANGELOG.md -s -r 0",
+        "version": "npm run test && npm run changelog"
+    },
+    "author": "xieyu",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/runtime": "^7.2.0",
+        "ant-design-pro": "^2.1.1",
+        "antd": "^3.10.4",
+        "axios": "^0.18.0",
+        "axios-mock-adapter": "^1.15.0",
+        "mobx": "^5.6.0",
+        "mobx-react": "^5.3.6",
+        "mobx-react-devtools": "^6.0.3",
+        "react": "^16.6.0",
+        "react-dom": "^16.6.0",
+        "react-router-config": "^4.4.0-beta.6",
+        "react-router-dom": "^4.3.1"
+    },
+    "devDependencies": {
+        "autoprefixer": "^9.3.1",
+        "babel-core": "^6.26.3",
+        "babel-loader": "^7.1.5",
+        "babel-plugin-import": "^1.11.0",
+        "babel-plugin-transform-decorators": "^6.24.1",
+        "babel-plugin-transform-decorators-legacy": "^1.3.5",
+        "babel-plugin-transform-runtime": "^6.23.0",
+        "babel-preset-env": "^1.7.0",
+        "babel-preset-react": "^6.24.1",
+        "babel-preset-stage-0": "^6.24.1",
+        "clean-webpack-plugin": "^0.1.19",
+        "commitizen": "^3.0.4",
+        "css-loader": "^1.0.1",
+        "cssnano": "^4.1.7",
+        "extract-text-webpack-plugin": "^3.0.2",
+        "fecs": "^1.6.2",
+        "file-loader": "^2.0.0",
+        "happypack": "^5.0.0",
+        "html-webpack-plugin": "^3.2.0",
+        "husky": "^1.1.3",
+        "less": "^3.8.1",
+        "less-loader": "^4.1.0",
+        "lint-staged": "^8.0.4",
+        "mini-css-extract-plugin": "^0.4.4",
+        "postcss-flexbugs-fixes": "^4.1.0",
+        "postcss-loader": "^3.0.0",
+        "prettier": "^1.14.3",
+        "react-hot-loader": "^4.3.12",
+        "style-loader": "^0.23.1",
+        "uglifyjs-webpack-plugin": "^2.0.1",
+        "url-loader": "^1.1.2",
+        "webpack": "^4.25.1",
+        "webpack-dev-server": "^3.1.10"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "lint-staged"
+        }
+    },
+    "lint-staged": {
+        "*.{js, scss, less, css, html}": [
+            "fecs format --replace true",
+            "fecs check --level=2 --reporter=baidu --rule",
+            "git add"
+        ]
+    },
+    "prettier": {
+        "printWidth": 120,
+        "semi": true,
+        "singleQuote": true,
+        "bracketSpacing": false,
+        "tabWidth": 4,
+        "trailingComma": "none"
+    },
+    "fecs": {
+        "eslint": {
+            "env": {
+                "es6": true
+            },
+            "rules": {
+                "fecs-valid-jsdoc": "off",
+                "fecs-export-on-declare": "off",
+                "fecs-min-vars-per-destructure": "off",
+                "fecs-no-require": "off",
+                "fecs-prefer-class": "off"
+            }
+        }
+    }
+}

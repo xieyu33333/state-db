@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+        <style>
+            .ouro {
+                position: fixed;
+                left:0;
+                right:0;
+                top:0;
+                bottom: 0;
+                margin: auto;
+                display:inline-block;
+                height: 46px;
+                width: 46px;
+                border-radius: 50%;
+                background: none repeat scroll 0 0 rgb(244, 166,36);
+                overflow:hidden;
+                box-shadow: 0 0 10px rgba(0,0,0,.1) inset, 0 0 25px rgba(0,0,255,0.075);
+            }
+
+            .ouro:after {
+                content: "";
+                position: absolute;
+                top: 9px; left: 9px;
+                display: block;
+                height: 28px; width: 28px;
+                background: none repeat scroll 0 0 #ffffff;
+                border-radius: 50%;
+                box-shadow: 0 0 10px rgba(0,0,0,.1);
+            }
+            .ouro > span {
+                position: absolute;
+                height: 100%; width: 50%;
+                overflow: hidden;
+            }
+            .left  { left:0   }
+            .right { left:50% }
+
+            .anim {
+                position: absolute;
+                left: 100%; top: 0;
+                height: 100%; width: 100%;
+                border-radius: 999px;
+                background: none repeat scroll 0 0 rgb(15,87,162);
+                opacity: 0.8;
+                animation: ui-spinner-rotate-left 1s infinite;
+                transform-origin: 0 50% 0;
+            }
+            .left .anim {
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+            }
+            .right .anim {
+                border-bottom-right-radius: 0;
+                border-top-right-radius: 0;
+                left: -100%;
+                transform-origin: 100% 50% 0;
+            }
+
+            /* v2 */
+            .ouro2 .anim {
+               animation-delay:0;
+            }
+
+            .ouro2 .right .anim{
+               animation-delay: 0.5s;
+            }
+
+            @keyframes ui-spinner-rotate-left{
+              0%{transform:rotate(0deg)}
+              12.5%{transform:rotate(45deg)}
+              25%{transform:rotate(90deg)}
+              37.5%{transform:rotate(135deg)}
+              50%{transform:rotate(180deg)}
+              67.5%{transform:rotate(225deg)}
+              75%{transform:rotate(270deg)}
+              87.5%{transform:rotate(315deg)}
+              100%{transform:rotate(360deg)}
+            }
+        </style>
+    </head>
+    <body>
+        <span class="ouro ouro2" id="loading">
+            <span class="left"><span class="anim"></span></span>
+            <span class="right"><span class="anim"></span></span>
+        </span>
+        <div id="alert-wrapper"></div>
+        <div id="root"></div>
+        <script type="text/javascript" src="./dev/vendors.js?v=<%= htmlWebpackPlugin.options.version %>"></script>
+    </body>
+</html>

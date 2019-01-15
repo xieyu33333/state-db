@@ -1,4 +1,4 @@
-const db = new DB();
+const db = new StateDB();
 
 db.createTable('state', false, {key: 'content', value: '测试一下啦啦啦啦啦'});
 db.createTable('list', false);
