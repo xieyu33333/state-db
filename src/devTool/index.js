@@ -1,40 +1,10 @@
 /*
  * 接收一个db实例
  */
-var renderConsole = {
-    injectPage: (methods) => {
-        window.showTable = methods.renderTable
-        window.showTableAll = methods.renderAll
-        window.showTableLine = methods.renderLine
-    },
-    renderArr: (arr, tablename) => {
-        console.log('******** ' + tablename + ' ********* , item_count: ' + arr.length);
-        console.table(arr);
-    },
-    renderItem: (line, tablename) => console.table(line)
-}
+import renderHTML from './render/renderHTML.js';
+import renderConsole from './render/renderConsole.js';
 
-var renderHTML = () => {
-    // injectPage: (methods) => {
-    //     // methods.renderTable
-    //     // methods.renderAll
-    //     // methods.renderLine
-    //     // var devtoolWrapper = document.createElement('div');
-    //     // devtoolWrapper.innerHTML = `<div>
-    //     //     <select id="">
-    //     //     </select id="">
-    //     //     <input id="">
-    //     // </div>`
-    //     // document.body.appendChild(devtoolWrapper);
-    // },
-    // renderArr: (arr) => console.table(arr),
-    // renderItem: (line) => console.table(line),
-}
-
-
-
-
-export default (db, render="console", namespace) => {
+export default (db, render="console") => {
     let renderer = {};
     if (render=="console") {
         renderer = renderConsole;
@@ -53,10 +23,22 @@ export default (db, render="console", namespace) => {
     }
 
     const renderAll = () => {
-        console.log(tables);
         for (let i in tables) {
-
             renderTable(i);
+        }
+    }
+
+    const getInfo = () => {
+        const tableNames = [];
+        const tableList = [];
+        for (let i in tables) {
+            tableNames.push(i);
+            tableList.push(tables[i]);
+        }
+        return {
+            tables: tableList,
+            tableNames: tableNames,
+            db: db
         }
     }
 
@@ -68,8 +50,9 @@ export default (db, render="console", namespace) => {
     const exportMethods = {
         renderAll,
         renderTable,
-        renderLine
+        renderLine,
+        getInfo
     }
 
-    renderer.injectPage(exportMethods, namespace);
+    renderer.injectPage(exportMethods);
 }

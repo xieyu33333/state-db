@@ -3,15 +3,17 @@ import TodoFilter from '../components/TodoFilterComponent';
 import TodoList from '../components/TodoListComponent';
 import TodoInput from '../components/TodoInputComponent';
 import FooterInfo from '../components/FooterInfoComponent';
-import '../style/todo.css';
+import '../style/todo.less';
 
 export default () => {
     return (
-        <section className="todoapp">
-            <TodoInput />
-            <TodoList />
-            <TodoFilter />
-            <FooterInfo />
-        </section>
+        <div id="todo">
+            <section className="todoapp">
+                <TodoInput />
+                <TodoList />
+                <TodoFilter />
+                <FooterInfo />
+            </section>
+        </div>
     );
 }

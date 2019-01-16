@@ -195,8 +195,11 @@ class Table {
     });
 
     _defineProperty(this, "update", obj => {
-      if (this[tmp][0]) {
-        Object.keys(obj).forEach(key => this[tmp][0][key] = obj[key]);
+      let result = this[tmp];
+      this[tmp] = this[store];
+
+      if (result[0]) {
+        Object.keys(obj).forEach(key => result[0][key] = obj[key]);
         this.register.trigger(this.name);
         return 'update success';
       } else {
@@ -216,7 +219,9 @@ class Table {
 
     _defineProperty(this, "delete", () => {
       try {
-        this[tmp].forEach(item => {
+        let result = this[tmp];
+        this[tmp] = this[store];
+        result.forEach(item => {
           var index = this[store].indexOf(item);
 
           if (index > -1) {
@@ -252,6 +257,7 @@ class Table {
      */
 
     this.saveMode = opts.saveMode || 'safe';
+    this.columns = [];
     this[store] = [];
     this.name = opts.name;
     this.dbOpts = opts.dbOpts || {};
@@ -404,6 +410,9 @@ class DB {
       opts.dbOpts = this.opts;
       const table = new Table(opts);
       this[tables][opts.name] = table;
+      this.register.trigger('db_event', Object.assign(opts, {
+        type: 'create_table'
+      }));
     });
 
     _defineProperty(this, "table", name => {
@@ -422,15 +431,31 @@ class DB {
 
     _defineProperty(this, "drop", name => {
       this[tables][name] = null;
+      this.register.trigger('db_event', {
+        tablename: name,
+        type: 'drop_table'
+      });
     });
 
     _defineProperty(this, "clear", () => {
       this[tables] = {};
+      this.register.trigger('db_event', {
+        type: 'clear'
+      });
+    });
+
+    _defineProperty(this, "bindFn", fn => {
+      this.register.on('db_event', fn);
+    });
+
+    _defineProperty(this, "unbindFn", fn => {
+      this.register.off('db_event', fn);
     });
 
     this[tables] = {};
     this.opts = Object.assign(defaultOpts, _opts);
-  } // 快速管理db和react组件的高阶组件 @db.dbconnectReact(table1, table2, table3)
+    this.register = new Observer();
+  } // 快速关联db和react组件的高阶组件 @db.dbconnectReact(table1, table2, table3)
 
 
 }

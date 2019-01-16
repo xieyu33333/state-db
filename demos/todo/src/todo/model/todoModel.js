@@ -22,7 +22,7 @@ db.createTable({
     name: 'todo',
     initValue: startTodos
 });
-devtool(db);
+devtool(db, 'html');
 const connector = db.dbconnectReact;
 const todoTable = db.table('todo');
 const stateTable = db.table('state');

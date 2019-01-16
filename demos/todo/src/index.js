@@ -6,6 +6,8 @@ import routers from './router';
 
 ReactDOM.render(<HashRouter>{renderRoutes(routers)}</HashRouter>, document.getElementById('root'));
 
+document.getElementById('loading').style.display = 'none';
+
 if (module.hot) {
     module.hot.accept();
 }

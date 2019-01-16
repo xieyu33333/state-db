@@ -18,6 +18,7 @@ class Table {
          * normal: 浅copy
          */
         this.saveMode = opts.saveMode || 'safe';
+        this.columns = [];
 
         this[store] = [];
         this.name = opts.name;
@@ -230,8 +231,11 @@ class Table {
      * 将where语句查询到的条目进行update, 但只update查到的第一条
      */
     update = (obj) => {
-        if (this[tmp][0]) {
-            Object.keys(obj).forEach(key => this[tmp][0][key] = obj[key])
+        let result = this[tmp];
+        this[tmp] = this[store];
+
+        if (result[0]) {
+            Object.keys(obj).forEach(key => result[0][key] = obj[key])
             this.register.trigger(this.name);
             return 'update success';
         }
@@ -272,7 +276,9 @@ class Table {
      */
     delete = () => {
         try {
-            this[tmp].forEach(item => {
+            let result = this[tmp];
+            this[tmp] = this[store];
+            result.forEach(item => {
                 var index = this[store].indexOf(item);
                 if (index > -1) {
                     this[store].splice(index, 1);

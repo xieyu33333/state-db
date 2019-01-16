@@ -110,15 +110,8 @@ step6: 创建业务组件，业务组件调用model方法对业务状态进行�
 ### 结合模板使用
 
 
-### 结合mobx使用
-[
-      "@babel/plugin-transform-runtime",
-      {
-        "corejs": false,
-        "helpers": true,
-        "regenerator": true,
-        "useESModules": false
-      }
-    ]
 
 ### 结合react使用
+
+
+### 结合vue使用
