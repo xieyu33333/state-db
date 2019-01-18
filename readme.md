@@ -94,16 +94,82 @@ IP协议 => TCP协议 => HTTP协议 这是一个层层嵌套的关系，但是�
 ```
 
 
-### 开发模式
-step1: 在app.js（总入口）中 initDb， 并初始化一些固定的状态表
-step2: 创建Layout
-step3: 创建路由表
-step4: 创建一个路由对应的PageEntry，在pageEntry中可以创建两种表：1、tmpTable(路由切换后会drop掉)，2、table(持续存在)
-step5: 创建操作表数据的model方法，比如拉取数据后写表等操作
-step6: 创建业务组件，业务组件调用model方法对业务状态进行增删改查
+### 推荐开发模式
+step1: 创建一个库，建议每个应用只有一个库, 并加入devtool;
+```js
+import DB from 'state-db.js';
+import devtool from 'state-db.js/build/devtool.bundle.js';
+const db = new DB();
+devtool(db, 'html'); //第二个参数默认为console
+export default db;
+```
+
+step2: 分析我们的单页APP，哪些状态是某个路由独有的，哪些是页面生命周期内持久存在的
+
+step3.1: 对于持久存在的状态，比如我们从服务端拉一个配置列表下来, 这时我们的建表语句和操作方法定义要放在组件的定义阶段，然后就可以在组件中调用这些方法了，比如：
+
+```js
+import db from '../db.js' //刚才已经new好的DB实例
+const configTable = db.createTable({
+    name: 'configList'
+})
+const fetchConfigList = () => {
+	$.ajax({
+        url: url,
+      	success: (res) => {configTable.init(res.data); }
+    })
+}
+
+const getConfig = (confName) => {
+    var arr = configTable.where('line.name == "'+ confName +'"').getValues;
+    if (arr.length) {
+		return arr[0].value;
+    }
+  	else{
+        return none;
+    } 
+}
+ export {fetchConfigList, getConfig}
+```
+
+step3.2: 对于某个路由或组件下独有的状态，比如一块独立的业务逻辑, 这时我们的建表语句和操作方法定义要放在组件的执行阶段 ，可以把model包装为一个函数，在组件入口执行处进行调用。`db.dbconnectReact('todos')`高阶组件会帮你进行组件和表之间的绑定和解绑。
+
+```js
+import db from '../db.js'
+const model = () => {
+    const todoTable = db.todoTable({name: 'todos' })
+    const fetchTodos = () => {
+        $.ajax({
+             url: url,
+             success: (res) => {todoTable.init(res.data);}
+        })
+    }
+    const getTodos = () => todoTable.getValues();
+    return { fetchTodos,  getTodos}
+}
+
+@db.dbconnectReact('todos')
+class Todo extends Component {
+    constructor() {
+      this.model = model();
+    }
+    componentDidMount(){
+        this.model.fetchTodos();
+    }
+  	render() {
+        return(
+        	return (<ul>
+            	{this.model.getTodos().map(todo => <li>{todo.content}/</li>)
+        	</ul>)
+        )
+    }
+}
+```
 
 
-### 开发辅助
+
+
+### 辅助工具
 因为DB是非常结构化的并且能够反映全局的，可以有一个完整的视图来告知我们页面当前的状态，方便我们开发和debug。
 
 
