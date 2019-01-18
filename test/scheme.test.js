@@ -37,7 +37,7 @@ test('id type not right', () => {
 
 // id 类型不对的，无法插入, 正确的可以插入
 test('id type not right 02', () => {
-    test_scheme.insertAll([
+    test_scheme.insert([
         {
             id: '1',
             name: 'wang',

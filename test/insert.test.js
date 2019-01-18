@@ -11,7 +11,7 @@ test('insert success', () => {
 });
 
 test('insert muti success', () => {
-    test1Table.insertAll([
+    test1Table.insert([
         {
             name: 'test5',
             age: 11

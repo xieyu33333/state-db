@@ -94,9 +94,23 @@ class Table {
      * 支持链式调用，但不支持多个where链式调用
      */
     where = (query) => {
-        this[tmp] = this[store].filter((line) => {
+        this[tmp] = this[store].filter((line, index) => {
             return eval(query);
         });
+        return this;
+    }
+
+    first = (n) => {
+        this[tmp] = this[store].filter((line, index) => {
+            return index < n;
+        })
+        return this;
+    }
+
+    last = (n) => {
+        this[tmp] = this[store].filter((line, index) => {
+            return index > this[store].length - n - 1;
+        })
         return this;
     }
 
@@ -171,20 +185,20 @@ class Table {
     }
 
     /*
-     * 通用的插入单条方法，仅内部使用
+     * 通用的插入单条方法，仅内部使用, 如果有指定key，则可能进行update操作
      */
-    _insert = (line) => {
+    _insert = (line, key) => {
         const data = this[store];
-        const primaryKey = this.primaryKey;
+        const filterKey = key || this.primaryKey;
         if (this.checkScheme(line)) {
             this.setPrimaryKey(line);
-            if (!isString(this.primaryKey)) {
+            if (!isString(filterKey)) {
                 data.push(line);
                 return true;
             }
             else {
                 for (let i; i < data.length; i++) {
-                    if (data[i][primaryKey] === line[primaryKey]) {
+                    if (data[i][filterKey] === line[filterKey]) {
                         data[i] = line;
                         return true
                     }
@@ -197,35 +211,40 @@ class Table {
         }
     }
     /*
-     * 插入一条数据, 如果有指定key的主键，则进行update操作
+     * 插入一条或多条数据, 如果有key, 则可能进行update操作
      */
-    insert = (item) => {
-        if (!isObj(item)) {
-            this.dbOpts.onError('Insert item must be an object.', item);
+    insert = (item, key) => {
+        if (isObj(item)) {
+            var line = this._beforeSave(item);
+            if (!this._insert(line, key)) {
+                this.dbOpts.onError('Insert item not match the scheme.', item);
+            }
+            else {
+                this.register.trigger(this.name, {type: 'insert', count: 1, insertCount: 1});
+                this.dbOpts.onChange('Table ' + this.name + ' insert Success', this, 'init', item);
+            }
         }
-        var line = this._beforeSave(item);
-        if (!this._insert(line)) {
-            this.dbOpts.onError('Insert item not match the scheme.', item);
+        else if (isArray(item)) {
+            var lines = this._beforeSave(item);
+            var insertCount = 0;
+            lines.forEach(line => {
+                if (this._insert(line, key)) {
+                    insertCount += 1;
+                }
+            })
+            if (insertCount) {
+                this.register.trigger(this.name, {type: 'insert', count: item.length, insertCount: insertCount});
+            }
+            else {
+                this.dbOpts.onError('All Insert item not match the scheme.', item);
+            }
         }
         else {
-            this.register.trigger(this.name);
-            this.dbOpts.onChange('Table ' + this.name + ' insert Success', this, 'init', item);
+            this.dbOpts.onError('Insert item type must be array or object', item);
         }
         return this;
     }
 
-    /*
-     * 插入多条数据
-     */
-    insertAll = (arr) => {
-        var lines = this._beforeSave(arr);
-        lines.forEach(item => {
-            this._insert(item)
-        })
-
-        this.register.trigger(this.name);
-        return this;
-    }
 
     /*
      * 将where语句查询到的条目进行update, 但只update查到的第一条
@@ -236,7 +255,7 @@ class Table {
 
         if (result[0]) {
             Object.keys(obj).forEach(key => result[0][key] = obj[key])
-            this.register.trigger(this.name);
+            this.register.trigger(this.name, {type: 'update'});
             return 'update success';
         }
         else {
@@ -245,7 +264,7 @@ class Table {
     }
 
     /*
-     * 将where语句查询到的全部条目进行update
+     * 将where语句查询到的全部条目update成同一个值
      */
     updateAll = (obj) => {
         this.register.trigger(this.name);

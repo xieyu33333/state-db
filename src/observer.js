@@ -19,13 +19,15 @@ class Observer {
 
     off = (name, fn) => {
         var actionArr = this.actions['on' + name];
-        if (!fn) {
-            actionArr = null;
-        }
-        else {
-            var index = actionArr.indexOf(fn);
-            if (index > -1) {
-                actionArr.splice(index, 1);
+        if (actionArr) {
+            if (!fn) {
+                actionArr = null;
+            }
+            else {
+                var index = actionArr.indexOf(fn);
+                if (index > -1) {
+                    actionArr.splice(index, 1);
+                }
             }
         }
     }

@@ -12,7 +12,6 @@ export default (db, render="console") => {
     else if (render=="html") {
         renderer = renderHTML;
     }
-    const tables = db.getTables();
 
     const renderArr = renderer.renderArr;
 
@@ -23,12 +22,14 @@ export default (db, render="console") => {
     }
 
     const renderAll = () => {
+        const tables = db.getTables()
         for (let i in tables) {
             renderTable(i);
         }
     }
 
     const getInfo = () => {
+        const tables = db.getTables()
         const tableNames = [];
         const tableList = [];
         for (let i in tables) {
@@ -55,4 +56,9 @@ export default (db, render="console") => {
     }
 
     renderer.injectPage(exportMethods);
+    db.bindFn(() => {
+        console.log('injectPage', db);
+        renderer.injectPage(exportMethods);
+    })
 }
+

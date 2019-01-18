@@ -20,3 +20,16 @@ test('change arr not change db', () => {
     // expect(arr[0].name).toBe("test1");
 });
 
+
+test('get first 2 value', () => {
+    var arr = test1Table.first(2).getValues();
+    expect(arr.length).toBe(2);
+    expect(arr[1].name).toBe("test2");
+});
+
+test('get last 2 value', () => {
+    var arr = test1Table.last(2).getValues();
+    expect(arr.length).toBe(2);
+    expect(arr[1].name).toBe("test3");
+});
+

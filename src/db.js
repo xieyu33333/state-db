@@ -25,20 +25,62 @@ class DB {
             return class Inheritance extends target {
                 constructor(props) {
                     super(props);
-                    this.fnList = []
-                    args.forEach(tableName => {
-                        var fn = () => this.setState({});
-                        var table = isString(tableName) ? self.table(tableName) : tableName;
-                        table.bindFn(fn);
-                        this.fnList.push({table: table, fn: fn})
-                    });
+                    this.fnList = [];
+                    this.args = args;
+                    this.bindTable = () => {
+                        if (this.args.length) {
+                            this.args.forEach(tableName => {
+                                var fn = () => this.setState({});
+                                var table = isString(tableName) ? self.table(tableName) : tableName;
+                                if (table) {
+                                    table.bindFn(fn);
+                                    this.fnList.push({table: table, fn: fn})
+                                }
+                            });
+                            if (this.args.length === this.fnList.length) {
+                                this.binded = true;
+                            }
+                        }
+                    }
+                    this.bindTable();
                 }
+
+                componentWillMount = () => {
+                    super.componentWillMount && super.componentWillMount();
+                    //如果在构造器阶段未绑定成功，在runtime阶段再绑定一次
+                    !this.binded && this.bindTable()
+                }
+
                 componentWillUnmount = () => {
-                    super.componentWillUnmount();
+                    super.componentWillUnmount && super.componentWillUnmount();
                     this.fnList.forEach(fnMap => {
                         fnMap.table.unbindFn(fnMap.fn);
                     });
                 }
+            }
+        }
+    }
+
+    dbconnectVue = (...args) => {
+        var fnList = [];
+        var fn = () => this.$forceUpdate();
+        return {
+            beforeCreate: () => {
+                if (args.length) {
+                    args.forEach(tableName => {
+                        var table = isString(tableName) ? self.table(tableName) : tableName;
+                        if (table) {
+                            table.bindFn(fn);
+                            fnList.push({table: table, fn: fn})
+                        }
+                    });
+                }
+            },
+
+            beforeDestroy: () => {
+                fnList.forEach(fnMap => {
+                    fnMap.table.unbindFn(fnMap.fn);
+                });
             }
         }
     }
@@ -78,12 +120,14 @@ class DB {
     }
 
     drop = (name) => {
-        this[tables][name] = null;
+        delete this[tables][name];
         this.register.trigger('db_event', {tablename: name, type: 'drop_table'});
     }
 
     clear = () => {
-        this[tables] = {};
+        for (let i in this[tables]) {
+            delete this[tables][i];
+        }
         this.register.trigger('db_event', {type: 'clear'});
     }
 

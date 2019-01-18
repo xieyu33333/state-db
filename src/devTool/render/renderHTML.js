@@ -42,6 +42,8 @@ var renderHTML = {
                     padding: 20px;
                     width: 500px;
                     border: 1px solid #c9c9c9;
+                    max-height: 650px;
+                    overflow: auto;
                 }
 
                 .state-db-table-scroll-wrapper {
@@ -130,15 +132,8 @@ var renderHTML = {
         renderFramework();
         renderData();
         bindEvent();
+        tables.forEach(table => table.unbindFn(renderData));
         tables.forEach(table => table.bindFn(renderData)); //触发自动变化
-
-        //如果DB发生变化，触发整体变化
-        db.bindFn(() => {
-            renderFramework();
-            renderData();
-            bindEvent();
-        })
-
 
     },
 

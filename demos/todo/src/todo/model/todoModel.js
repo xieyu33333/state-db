@@ -1,7 +1,4 @@
-import DB from '../../common/db.js';
-import devtool from '../../common/devtool.db.js';
-
-const db = new DB();
+import db from  '../../db.js';
 const startTodos = [
     {id: 1, content: '第一件事情', completed: 1},
     {id: 2, content: '第二件事情', completed: 0},
@@ -13,7 +10,7 @@ const startTodos = [
  * 进入一块独立业务，先清除所有状态
  * 建表，一个是todo的数据表，一个是保存页面本地一些业务状态
  */
-db.clear();
+// db.clear();
 db.createTable({
     name: 'state',
     initValue: {key: "showState", value: "all"}
@@ -22,14 +19,16 @@ db.createTable({
     name: 'todo',
     initValue: startTodos
 });
-devtool(db, 'html');
+
 const connector = db.dbconnectReact;
 const todoTable = db.table('todo');
 const stateTable = db.table('state');
 
 //增加一个todo
 const addTodo = (value) => {
-    todoTable.insert({id: Math.random(), content: value, completed: 0});
+    // setTimeout(() => {
+        todoTable.insert({id: Math.random(), content: value, completed: 0});
+    // }, 1000)
 }
 
 //获取todo数量

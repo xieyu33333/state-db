@@ -6,6 +6,7 @@ import FooterInfo from '../components/FooterInfoComponent';
 import '../style/todo.less';
 
 export default () => {
+
     return (
         <div id="todo">
             <section className="todoapp">

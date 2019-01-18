@@ -109,9 +109,138 @@ step6: 创建业务组件，业务组件调用model方法对业务状态进行�
 
 ### 结合模板使用
 
+```js
+const getArticals = articalTable.getValues();
+const render = () => {
+    str = `<ul>
+		${getArticals().map(artical => `<li>${artical.title}/</li>`)}
+	</ul>`
+    $('#app').innerHTML = str;
+}
 
+articalTable.bindFn(render);
+```
 
 ### 结合react使用
 
+##### 数据表和组件进行绑定（表变化触发组件render）
+
+```jsx
+const getArticals = articalTable.getValues()
+
+@db.dbconnectReact('artical')
+class Artical extends Component {
+    render() {
+        return (<ul>
+            {getArticals().map(artical => <li>{artical.title}/</li>)
+        </ul>)
+    }
+}
+```
+
+
 
 ### 结合vue使用
+
+```js
+const getArticals = articalTable.getValues()
+
+new Vue({
+  mixins: [db.dbconnectVue('artical')],
+  //... your own logic
+})
+```
+
+
+
+
+### API 文档
+
+##### 创建数据库实例
+
+```js
+const db = new DB();
+```
+
+##### 创建一张表
+
+可以通过schema字段限制字段的类型和是否必填
+
+```js
+db.createTable({
+    name: 'articals', //required
+  	schema: {
+        id: {type: 'Number', reuqired: true}
+      	title: {type: 'String', required: true},
+        content: {type: 'String', required: false},
+    },  //options
+  	initValue:[{id: 1, title: "我的奋斗", content: "你好。。。"}], //options
+    pramaryKey: "id" //options
+})
+```
+
+##### 获取表
+
+```js
+const articalTable = db.table('artical');
+```
+
+##### 删除表
+
+需要注意的是，drop和clear只是在库中删除表，但是如果表对象依然被应用引用，表对象实际在内存中并未被清空
+
+```js
+db.drop('artical'); //删除名为artical的表
+db.clear();         //清除全部表
+```
+
+##### 监听库变化（增删表时）
+
+```js
+db.bindFn((changeInfo) => {
+    console.log(changeInfo);
+})
+```
+
+##### 监听表变化（增删查数据时）
+
+```js
+articalTable.bindFn((changeInfo) => {
+    console.log(changeInfo);
+})
+```
+
+##### 增
+
+```js
+articalTable.insert({ id: 2, name: "hi，你好"});
+
+articalTable.insert([
+    {id: 3, name: '21天精通C++'},
+    {id: 4，name: '21天精通Java'}
+])
+```
+
+##### 删
+
+```js
+articalTable.where('line.name=="我的奋斗"').delete()
+```
+
+##### 改
+
+```js
+articalTable.where('line.id==1').update({name: "你的奋斗"});
+```
+
+##### 查
+
+```js
+//指定条件的值
+articalTable.where('line.name=="我的奋斗 && index !== 1"').getValues();
+//查前三个
+articalTable.first(3).getValues();
+//查后三个
+articalTable.last(3).getValues();
+```
+
