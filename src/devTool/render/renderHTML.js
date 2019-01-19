@@ -181,7 +181,10 @@ var renderHTML = {
         }
         $tablesWrapper.appendChild($tableWrapper);
     },
-    renderItem: (line) => console.table(line)
+
+    renderItem: (line) => {
+        console.table(line)
+    }
 }
 
 export default renderHTML;

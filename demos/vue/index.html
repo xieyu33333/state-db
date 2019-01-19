@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试</title>
+</head>
+<body>
+    <div id="app">
+        <header>{{brand}}</header>
+        <ul>
+            <li v-for="artical in getArticals()">
+                {{ artical.title }}
+            </li>
+        </ul>
+        <button v-on:click="addArtical">添加文章</button>
+    </div>
+    <script src="https://cdn.bootcss.com/vue/2.5.22/vue.min.js"></script>
+    <script src="db.js"></script>
+    <script src="devtool.db.js"></script>
+    <script>
+        var db = new StateDB();
+        devtool(db, 'html');
+        var articalTable = db.createTable({
+            name: 'artical',
+            initValue: [
+                {title: "我的奋斗", author: "xiaoming", content: "lalala"}
+            ]
+        });
+
+
+        new Vue({
+            mixins: [db.dbconnectVue('artical')],
+            el: '#app',
+            data:  {
+                brand: 'goodbye',
+                articals: []
+            },
+            methods: {
+                addArtical: () => {
+                    articalTable.insert({
+                        title: "随机书籍" +  Math.random(),
+                        author: "随机作者" + Math.random(),
+                        content: "lalala"
+                    })
+                },
+
+                getArticals: () => {
+                    return articalTable.getValues()
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>

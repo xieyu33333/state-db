@@ -3,6 +3,7 @@
 import { uglify } from 'rollup-plugin-uglify';
 import babel from 'rollup-plugin-babel';
 import copy from 'rollup-plugin-copy';
+import _ from 'lodash';
 
 // `npm run build` -> `production` is true
 // `npm run dev` -> `production` is false
@@ -13,8 +14,8 @@ const main =  {
     // external: [ '@babel/runtime/helpers/defineProperty' ],
     output: {
         file: 'build/bundle.js',
-        format: 'esm',
-        // format: 'umd',
+        // format: 'esm',
+        format: 'umd',
         sourcemap: true,
         name: 'StateDB'
     },
@@ -28,19 +29,27 @@ const main =  {
         }),
         production && uglify(), // minify, but only in production
         copy({
-            "build/bundle.js": "demos/todo/src/common/db.js",
+            "build/bundle.js": "demos/vue/db.js",
             verbose: true
         })
     ]
 }
+
+const esm = _.cloneDeep(main);
+esm.output.format = 'esm';
+esm.output.file = 'build/bundle.esm.js';
+esm.plugins[2] = copy({
+    "build/bundle.esm.js": "demos/todo/src/common/db.js",
+    verbose: true
+})
 
 const devtool =  {
     input: 'src/devTool/index.js',
     // external: [ '@babel/runtime/helpers/defineProperty' ],
     output: {
         file: 'build/devtool.bundle.js',
-        format: 'esm',
-        // format: 'umd',
+        // format: 'esm',
+        format: 'umd',
         sourcemap: true,
         name: 'devtool'
     },
@@ -55,9 +64,10 @@ const devtool =  {
         production && uglify(), // minify, but only in production
         copy({
             "build/devtool.bundle.js": "demos/todo/src/common/devtool.db.js",
+            "build/devtool.bundle.js": "demos/vue/devtool.db.js",
             verbose: true
         })
     ]
 }
 
-export default [main, devtool];
+export default [main, esm, devtool];

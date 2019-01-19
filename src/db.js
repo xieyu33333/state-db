@@ -63,21 +63,26 @@ class DB {
 
     dbconnectVue = (...args) => {
         var fnList = [];
-        var fn = () => this.$forceUpdate();
+        var self = this;
         return {
-            beforeCreate: () => {
+            methods: {
+                _state_db_update_fn: function() {
+                    this.$forceUpdate();
+                }
+            },
+            created: function() {
                 if (args.length) {
                     args.forEach(tableName => {
                         var table = isString(tableName) ? self.table(tableName) : tableName;
                         if (table) {
-                            table.bindFn(fn);
-                            fnList.push({table: table, fn: fn})
+                            table.bindFn(this._state_db_update_fn);
+                            fnList.push({table: table, fn: this._state_db_update_fn})
                         }
                     });
                 }
             },
 
-            beforeDestroy: () => {
+            beforeDestroy: function() {
                 fnList.forEach(fnMap => {
                     fnMap.table.unbindFn(fnMap.fn);
                 });
@@ -102,6 +107,7 @@ class DB {
         const table = new Table(opts);
         this[tables][opts.name] = table;
         this.register.trigger('db_event', Object.assign(opts, {type: 'create_table'}));
+        return table;
     }
 
     table = (name) => {
