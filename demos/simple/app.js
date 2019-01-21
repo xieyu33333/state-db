@@ -1,7 +1,11 @@
 const db = new StateDB();
+devtool(db, 'html');
 
-db.createTable('state', false, {key: 'content', value: '测试一下啦啦啦啦啦'});
-db.createTable('list', false);
+db.createTable({
+    name: 'state',
+    schema: false,
+    initValue: {key: 'content', value: '测试一下啦啦啦啦啦'}
+});
 
 const model = {};
 //组件不允许直接定义update/insert等方法
@@ -11,7 +15,6 @@ model.getContent = () => db.table('state').where('line.key == \"content\"').getV
 
 //组件自己的方法只进行对model方法的修饰
 const render = () => {
-    console.log('render');
     const getContent = () => {
         return model.getContent()[0].value
     }
@@ -19,7 +22,6 @@ const render = () => {
     const tpl = `<div>
         <p>${ getContent() }</p>
         <button onclick="model.changeContent()">修改content</button>
-        <button onclick="model.setList()">远程拉取list</button>
     </div>`
 
     document.getElementById('app').innerHTML = tpl;
