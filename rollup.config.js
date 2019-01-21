@@ -63,11 +63,18 @@ const devtool =  {
         }),
         production && uglify(), // minify, but only in production
         copy({
-            "build/devtool.bundle.js": "demos/todo/src/common/devtool.db.js",
             "build/devtool.bundle.js": "demos/vue/devtool.db.js",
             verbose: true
         })
     ]
 }
 
-export default [main, esm, devtool];
+const esmDevtool = _.cloneDeep(devtool);
+esmDevtool.output.format = 'esm';
+esmDevtool.output.file = 'build/devtool.bundle.esm.js';
+esmDevtool.plugins[2] = copy({
+    "build/devtool.bundle.esm.js": "demos/todo/src/common/devtool.db.js",
+    verbose: true
+})
+
+export default [main, esm, devtool, esmDevtool];

@@ -1,7 +1,7 @@
 ## state-db解决了哪些问题？
 
--[为什么要做state-db](docs/为什么要做state-db.md)
--[组件化开发真的是银弹么？](docs/组件化开发真的是银弹么.md)
+- [为什么要做state-db](docs/为什么要做state-db.md)
+- [组件化开发真的是银弹么？](docs/组件化开发真的是银弹么.md)
 
 ## API 文档
 
@@ -95,6 +95,14 @@ articalTable.last(3).getValues();
 
 ## 辅助工具
 因为DB是非常结构化的并且能够反映全局的，可以有一个完整的视图来告知我们页面当前的状态，方便我们开发和debug。
+```js
+import DB from 'state-db.js';
+import devtool from 'state-db.js/build/devtool.bundle.js'; //引入devtool
+const db = new DB();
+devtool(db, 'html'); //第二个参数默认为console
+export default db;
+```
+![](https://fe-learn-react.oss-cn-beijing.aliyuncs.com/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_07accb65-ecae-4eca-8854-72f0909a2c3e.png)
 
 
 ## 如何与框架结合
