@@ -144,10 +144,7 @@ class Table {
             return JSON.parse(JSON.stringify(result));
         }
         else if (isArray(columns)) {
-            let tmpArr = [];
-            result.forEach(item => {
-                item
-            })
+            return JSON.parse(JSON.stringify(result)); //查指定字段名算法时间复杂度太高，暂不实现
         }
     }
 
@@ -267,25 +264,36 @@ class Table {
      * 将where语句查询到的全部条目update成同一个值
      */
     updateAll = (obj) => {
-        this.register.trigger(this.name);
+        let result = this[tmp];
+        this[tmp] = this[store];
+
+        result.forEach(item => {
+            Object.keys(obj).forEach(key => item[key] = obj[key])
+        })
+        this.register.trigger(this.name, {type: 'update'});
+        return 'update success';
+
+    }
+
+    /*
+     * 将where语句查询到的全部条目跟传入的数字进行key对比，key值相同的进行update
+     */
+    updateByKey = (arr, key) => {
+        let result = this[tmp];
+        this[tmp] = this[store];
+
+        result.map(line => Object.assign(line, arr.find(item => item[key] == line[key])));
+
+
+        this.register.trigger(this.name, {type: 'update'});
         return [];
     }
+
 
     /*
      * 将where语句查询到的全部条目进行update
      */
-    updateByKey = (arr, keys) => {
-
-
-        this.register.trigger(this.name);
-        return [];
-    }
-
-
-    /*
-     * 将where语句查询到的全部条目进行update
-     */
-    replaceByColumn(column = this.primaryKey, values) {
+    replace(arr) {
         this.register.trigger(this.name);
     }
 
