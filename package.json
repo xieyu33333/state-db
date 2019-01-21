@@ -1,6 +1,6 @@
 {
   "name": "state-db.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "state management",
   "main": "build/bundle.js",
   "module": "build/bundle.esm.js",
