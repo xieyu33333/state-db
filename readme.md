@@ -104,7 +104,7 @@ articalTable.last(3).getValues();
 因为DB是非常结构化的并且能够反映全局的，可以有一个完整的视图来告知我们页面当前的状态，方便我们开发和debug。
 ```js
 import DB from 'state-db.js';
-import devtool from 'state-db.js/build/devtool.bundle.js'; //引入devtool
+import devtool from 'state-db.js/build/devtool.bundle.esm.js'; //引入devtool
 const db = new DB();
 devtool(db, 'html'); //第二个参数默认为console
 export default db;
@@ -164,7 +164,7 @@ new Vue({
 ##### step1: 创建一个库，建议每个应用只有一个库, 并加入devtool;
 ```js
 import DB from 'state-db.js';
-import devtool from 'state-db.js/build/devtool.bundle.js';
+import devtool from 'state-db.js/build/devtool.bundle.esm.js';
 const db = new DB();
 devtool(db, 'html'); //第二个参数默认为console
 export default db;
