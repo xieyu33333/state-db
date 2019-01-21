@@ -14,6 +14,7 @@ npm i state-db.js
 ##### 创建数据库实例
 
 ```js
+import DB from 'state-db';
 const db = new DB();
 ```
 
