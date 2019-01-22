@@ -38,7 +38,7 @@ export default () => {
     }
 
     const getShowState = () => {
-        const line = stateTable.where('line.key == \"showState\"').getValues();
+        const line = stateTable.where('line.key == \"showState\"').values;
         return line[0] ? line[0].value : 'all';
     }
 
@@ -48,13 +48,13 @@ export default () => {
 
     const getTodos = (state) => {
         if (state === 'active') {
-            return todoTable.where('line.completed === 0').getValues();
+            return todoTable.where('line.completed === 0').values;
         }
         else if (state === 'completed') {
-            return todoTable.where('line.completed === 1').getValues();
+            return todoTable.where('line.completed === 1').values;
         }
         else {
-            return todoTable.getValues();
+            return todoTable.values;
         }
     }
 

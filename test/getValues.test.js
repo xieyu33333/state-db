@@ -33,3 +33,10 @@ test('get last 2 value', () => {
     expect(arr[1].name).toBe("test3");
 });
 
+
+test('get last 2 value use values', () => {
+    var arr = test1Table.last(2).values;
+    expect(arr.length).toBe(2);
+    expect(arr[1].name).toBe("test3");
+});
+

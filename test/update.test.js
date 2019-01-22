@@ -62,7 +62,6 @@ test('update by key', () => {
         name: 'lee',
         age: 11
     }], 'id')
-    console.log(test_update.getValues());
     expect(test_update.where('line.id == 1').getValues()[0].name).toBe('wanghaoqi');
     expect(test_update.where('line.id == 2').getValues()[0].name).toBe('liu');
     expect(test_update.where('line.id == 3').getValues()[0].name).toBe('lee');

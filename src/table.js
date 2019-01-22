@@ -13,6 +13,7 @@ class Table {
         //暂未实现， loose: 不符合要求的行不插入，其他正常插入。 strict: 只要有不符合要求的都不允许插入。
         this.schemaMode = opts.schemaMode || 'loose';
         /*
+         * saveMode：插数据库前的处理模式：
          * safe：深度clone default
          * unsafe: 不处理,
          * normal: 浅copy
@@ -147,9 +148,19 @@ class Table {
     }
 
     /*
-     * 返回查找到的数组，如果没有字段名，则返回全部字段，如果有字段名，则返回指定字段
+     * 返回查找到的数组，不使用缓存
      */
     getValues = () => {
+        let result = this[tmp];
+        this[tmp] = this[store];
+
+        return JSON.parse(JSON.stringify(result));
+    }
+
+    /*
+     * 返回查找到的数组, 并且会使用缓存
+     */
+    get values() {
         let result = this[tmp];
         this[tmp] = this[store];
         /*
@@ -265,6 +276,7 @@ class Table {
     update = (obj) => {
         let result = this[tmp];
         this[tmp] = this[store];
+        var obj = this._beforeSave(obj);
 
         if (result[0]) {
             Object.keys(obj).forEach(key => result[0][key] = obj[key])
@@ -282,6 +294,7 @@ class Table {
     updateAll = (obj) => {
         let result = this[tmp];
         this[tmp] = this[store];
+        var obj = this._beforeSave(obj);
 
         result.forEach(item => {
             Object.keys(obj).forEach(key => item[key] = obj[key])
@@ -301,6 +314,7 @@ class Table {
         }
         let result = this[tmp];
         this[tmp] = this[store];
+        var arr = this._beforeSave(arr);
 
         result.forEach(line => Object.assign(line, arr.find(item => item[key] == line[key])));
 
@@ -314,14 +328,17 @@ class Table {
      */
     delete = () => {
         try {
-            let result = this[tmp];
+            let result = this[tmp].concat([]);
             this[tmp] = this[store];
-            result.forEach(item => {
-                var index = this[store].indexOf(item);
-                if (index > -1) {
-                    this[store].splice(index, 1);
-                }
-            });
+
+            for (let i = 0, l = result.length; i < l; i++ ) {
+
+                (function(i, store){
+                    let index = store.indexOf(result[i]);
+                    index > -1 && store.splice(index, 1);
+                })(i, this[store])
+            }
+
             this.register.trigger(this.name);
             return 'delete success';
         } catch(e) {

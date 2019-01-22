@@ -30,6 +30,9 @@ const main =  {
         production && uglify(), // minify, but only in production
         copy({
             "build/bundle.js": "demos/vue/db.js",
+            verbose: true
+        }),
+        copy({
             "build/bundle.js": "demos/simple/db.js",
             verbose: true
         })

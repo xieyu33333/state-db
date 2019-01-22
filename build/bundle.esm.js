@@ -130,18 +130,7 @@ class Table {
     _defineProperty(this, "getValues", () => {
       let result = this[tmp];
       this[tmp] = this[store];
-      /*
-       * 优先使用缓存值，当执行增删改操作后，缓存会清除
-       */
-
-      const cacheValue = this.queryCache[this.currentQuery];
-
-      if (cacheValue) {
-        return cacheValue;
-      } else {
-        this.queryCache[this.currentQuery] = JSON.parse(JSON.stringify(result));
-        return this.queryCache[this.currentQuery];
-      }
+      return JSON.parse(JSON.stringify(result));
     });
 
     _defineProperty(this, "count", () => {
@@ -309,6 +298,7 @@ class Table {
 
     this.schemaMode = opts.schemaMode || 'loose';
     /*
+     * saveMode：插数据库前的处理模式：
      * safe：深度clone default
      * unsafe: 不处理,
      * normal: 浅copy
@@ -398,6 +388,30 @@ class Table {
   }
   /*
    * 支持链式调用，但不支持多个where链式调用
+   */
+
+
+  /*
+   * 返回查找到的数组, 并且会使用缓存
+   */
+  get values() {
+    let result = this[tmp];
+    this[tmp] = this[store];
+    /*
+     * 优先使用缓存值，当执行增删改操作后，缓存会清除
+     */
+
+    const cacheValue = this.queryCache[this.currentQuery];
+
+    if (cacheValue) {
+      return cacheValue;
+    } else {
+      this.queryCache[this.currentQuery] = JSON.parse(JSON.stringify(result));
+      return this.queryCache[this.currentQuery];
+    }
+  }
+  /*
+   * 返回查询后数组长度
    */
 
 

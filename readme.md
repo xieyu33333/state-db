@@ -93,7 +93,12 @@ articalTable.where('line.id==1').update({name: "你的奋斗"});
 
 ```js
 //指定条件的值
+//getValues()保证每次取出的都是全新的对象，values则会使用缓存,和上次同一个查询使用同样的对象，使用values性能更好，使用getValues()更安全。
+//只要进行过增删改操作，缓存都会清空。
 articalTable.where('line.name=="我的奋斗 && index !== 1"').getValues();
+articalTable.where('line.name=="我的奋斗 && index !== 1"').values;
+
+
 //查前三个
 articalTable.first(3).getValues();
 //查后三个
