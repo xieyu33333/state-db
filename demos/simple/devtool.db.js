@@ -162,11 +162,22 @@
 
         var renderValues = () => {
           var renderItem = item => {
-            var str = '';
-            Object.values(item).forEach(value => {
-              str += `<td>${value}</td>`;
-            });
-            return str;
+            var columns = getColumns();
+            var strArr = [];
+
+            for (let i = 0; i < columns.length; i++) {
+              strArr.push('<td></td>');
+            }
+
+            for (let i in item) {
+              var index = columns.indexOf(i);
+
+              if (index > -1) {
+                strArr[index] = `<td>${item[i]}</td>`;
+              }
+            }
+
+            return strArr.join('');
           };
 
           var str = '';

@@ -65,6 +65,9 @@ const devtool =  {
         production && uglify(), // minify, but only in production
         copy({
             "build/devtool.bundle.js": "demos/vue/devtool.db.js",
+            verbose: true
+        }),
+        copy({
             "build/devtool.bundle.js": "demos/simple/devtool.db.js",
             verbose: true
         })

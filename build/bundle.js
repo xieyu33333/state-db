@@ -133,8 +133,7 @@
         if (!columns) {
           return JSON.parse(JSON.stringify(result));
         } else if (isArray(columns)) {
-          result.forEach(item => {
-          });
+          return JSON.parse(JSON.stringify(result)); //查指定字段名算法时间复杂度太高，暂不实现
         }
       });
 
@@ -153,7 +152,7 @@
 
         this[store].length = 0;
         lines.forEach(item => {
-          if (this.checkScheme(item)) {
+          if (this.checkschema(item)) {
             this[store].push(item);
           }
         });
@@ -167,24 +166,22 @@
         const data = this[store];
         const filterKey = key || this.primaryKey;
 
-        if (this.checkScheme(line)) {
+        if (this.checkschema(line)) {
           this.setPrimaryKey(line);
 
           if (!isString(filterKey)) {
             data.push(line);
             return true;
           } else {
-            for (let i; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
               if (data[i][filterKey] === line[filterKey]) {
                 data[i] = line;
                 return true;
               }
             }
 
-            if (!flag) {
-              data.push(line);
-              return true;
-            }
+            data.push(line);
+            return true;
           }
         }
       });
@@ -194,7 +191,7 @@
           var line = this._beforeSave(item);
 
           if (!this._insert(line, key)) {
-            this.dbOpts.onError('Insert item not match the scheme.', item);
+            this.dbOpts.onError('Insert item not match the schema.', item);
           } else {
             this.register.trigger(this.name, {
               type: 'insert',
@@ -220,7 +217,7 @@
               insertCount: insertCount
             });
           } else {
-            this.dbOpts.onError('All Insert item not match the scheme.', item);
+            this.dbOpts.onError('All Insert item not match the schema.', item);
           }
         } else {
           this.dbOpts.onError('Insert item type must be array or object', item);
@@ -245,13 +242,30 @@
       });
 
       _defineProperty(this, "updateAll", obj => {
-        this.register.trigger(this.name);
-        return [];
+        let result = this[tmp];
+        this[tmp] = this[store];
+        result.forEach(item => {
+          Object.keys(obj).forEach(key => item[key] = obj[key]);
+        });
+        this.register.trigger(this.name, {
+          type: 'update'
+        });
+        return 'update success';
       });
 
-      _defineProperty(this, "updateByKey", (arr, keys) => {
-        this.register.trigger(this.name);
-        return [];
+      _defineProperty(this, "updateByKey", (arr, key) => {
+        if (!isArray(arr) || !isString(key)) {
+          this.dbOpts.onError('updateByKey first param should be array, second param should be string', [arr, key]);
+          return;
+        }
+
+        let result = this[tmp];
+        this[tmp] = this[store];
+        result.forEach(line => Object.assign(line, arr.find(item => item[key] == line[key])));
+        this.register.trigger(this.name, {
+          type: 'update'
+        });
+        return 'updateByKey success';
       });
 
       _defineProperty(this, "delete", () => {
@@ -284,9 +298,9 @@
         return this;
       });
 
-      this.scheme = opts.scheme || false; //暂未实现， loose: 不符合要求的行不插入，其他正常插入。 strict: 只要有不符合要求的都不允许插入。
+      this.schema = opts.schema || false; //暂未实现， loose: 不符合要求的行不插入，其他正常插入。 strict: 只要有不符合要求的都不允许插入。
 
-      this.schemeMode = opts.schemeMode || 'loose';
+      this.schemaMode = opts.schemaMode || 'loose';
       /*
        * safe：深度clone default
        * unsafe: 不处理,
@@ -301,17 +315,17 @@
 
       this.setPrimaryKey = () => {};
 
-      this.checkScheme = () => true;
+      this.checkschema = () => true;
 
-      if (isObj(this.scheme)) {
-        this.checkScheme = line => {
-          for (var i in this.scheme) {
-            if (this.scheme[i].required && line[i] === undefined) {
+      if (isObj(this.schema)) {
+        this.checkschema = line => {
+          for (var i in this.schema) {
+            if (this.schema[i].required && line[i] === undefined) {
               return false;
             }
 
-            if (this.scheme[i].type && line[i] !== undefined) {
-              if (getType(line[i]) !== this.scheme[i].type) {
+            if (this.schema[i].type && line[i] !== undefined) {
+              if (getType(line[i]) !== this.schema[i].type) {
                 return false;
               }
             }
@@ -369,17 +383,6 @@
     }
     /*
      * 支持链式调用，但不支持多个where链式调用
-     */
-
-
-    /*
-     * 将where语句查询到的全部条目进行update
-     */
-    replaceByColumn(column = this.primaryKey, values) {
-      this.register.trigger(this.name);
-    }
-    /*
-     * 删除通过where语句查询到的条目
      */
 
 

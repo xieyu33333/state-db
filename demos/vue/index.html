@@ -12,6 +12,7 @@
             </li>
         </ul>
         <button v-on:click="addArtical">添加文章</button>
+        <button v-on:click="addTest">添加test</button>
     </div>
     <script src="https://cdn.bootcss.com/vue/2.5.22/vue.min.js"></script>
     <script src="db.js"></script>
@@ -39,6 +40,14 @@
                     articalTable.insert({
                         title: "随机书籍" +  Math.random(),
                         author: "随机作者" + Math.random(),
+                        content: "lalala"
+                    })
+                },
+
+                addTest: () => {
+                    articalTable.insert({
+                        title1: "随机书籍" +  Math.random(),
+                        author1: "随机作者" + Math.random(),
                         content: "lalala"
                     })
                 },
