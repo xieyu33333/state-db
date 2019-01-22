@@ -19,7 +19,7 @@ class Table {
          */
         this.saveMode = opts.saveMode || 'safe';
         this.columns = [];
-
+        this.queryCache = {};
         this[store] = [];
         this.name = opts.name;
         this.dbOpts = opts.dbOpts || {};
@@ -80,6 +80,13 @@ class Table {
         }
 
         this.register = new Observer();
+
+        /*
+         * 数据库发生变化后，queryCache清空
+         */
+        this.register.on(this.name, () => {
+            this.queryCache = {};
+        });
         if (isArray(opts.initValue)) {
             this.init(opts.initValue);
         }
@@ -97,6 +104,12 @@ class Table {
         this[tmp] = this[store].filter((line, index) => {
             return eval(query);
         });
+        /*
+         * 将当前query缓存一下，下次操作被覆盖
+         */
+        this.currentQuery = {
+            query: query.trim(),
+        }
         return this;
     }
 
@@ -136,15 +149,20 @@ class Table {
     /*
      * 返回查找到的数组，如果没有字段名，则返回全部字段，如果有字段名，则返回指定字段
      */
-    getValues = (columns) => {
+    getValues = () => {
         let result = this[tmp];
         this[tmp] = this[store];
+        /*
+         * 优先使用缓存值，当执行增删改操作后，缓存会清除
+         */
+        const cacheValue = this.queryCache[this.currentQuery];
 
-        if (!columns) {
-            return JSON.parse(JSON.stringify(result));
+        if (cacheValue) {
+            return cacheValue
         }
-        else if (isArray(columns)) {
-            return JSON.parse(JSON.stringify(result)); //查指定字段名算法时间复杂度太高，暂不实现
+        else {
+            this.queryCache[this.currentQuery] = JSON.parse(JSON.stringify(result));
+            return this.queryCache[this.currentQuery];
         }
     }
 
