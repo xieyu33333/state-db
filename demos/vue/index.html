@@ -5,14 +5,14 @@
 </head>
 <body>
     <div id="app">
-        <header>{{brand}}</header>
+        <header>brand</header>
+        <button v-on:click="addArtical">添加文章</button>
+        <button v-on:click="addTest">添加test</button>
         <ul>
             <li v-for="artical in getArticals()">
                 {{ artical.title }}
             </li>
         </ul>
-        <button v-on:click="addArtical">添加文章</button>
-        <button v-on:click="addTest">添加test</button>
     </div>
     <script src="https://cdn.bootcss.com/vue/2.5.22/vue.min.js"></script>
     <script src="db.js"></script>
@@ -31,10 +31,7 @@
         new Vue({
             mixins: [db.dbconnectVue('artical')],
             el: '#app',
-            data:  {
-                brand: 'goodbye',
-                articals: []
-            },
+            //我们的目标是消灭组件中的data, 完全用数据库代替。
             methods: {
                 addArtical: () => {
                     articalTable.insert({

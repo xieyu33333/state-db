@@ -179,7 +179,7 @@ var renderHTML = {
 
         if (arr.length) {
             $tableWrapper.innerHTML = `
-            <p>表名：${tablename}</p>
+            <p>表名：${tablename}，count: ${arr.length}</p>
             <div class="state-db-table-scroll-wrapper">
                 <table>
                     <tr>${renderColumns()}</tr>

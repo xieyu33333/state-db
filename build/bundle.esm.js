@@ -226,6 +226,8 @@ class Table {
       let result = this[tmp];
       this[tmp] = this[store];
 
+      var obj = this._beforeSave(obj);
+
       if (result[0]) {
         Object.keys(obj).forEach(key => result[0][key] = obj[key]);
         this.register.trigger(this.name, {
@@ -240,6 +242,9 @@ class Table {
     _defineProperty(this, "updateAll", obj => {
       let result = this[tmp];
       this[tmp] = this[store];
+
+      var obj = this._beforeSave(obj);
+
       result.forEach(item => {
         Object.keys(obj).forEach(key => item[key] = obj[key]);
       });
@@ -257,6 +262,9 @@ class Table {
 
       let result = this[tmp];
       this[tmp] = this[store];
+
+      var arr = this._beforeSave(arr);
+
       result.forEach(line => Object.assign(line, arr.find(item => item[key] == line[key])));
       this.register.trigger(this.name, {
         type: 'update'
@@ -266,15 +274,16 @@ class Table {
 
     _defineProperty(this, "delete", () => {
       try {
-        let result = this[tmp];
+        let result = this[tmp].concat([]);
         this[tmp] = this[store];
-        result.forEach(item => {
-          var index = this[store].indexOf(item);
 
-          if (index > -1) {
-            this[store].splice(index, 1);
-          }
-        });
+        for (let i = 0, l = result.length; i < l; i++) {
+          (function (i, store) {
+            let index = store.indexOf(result[i]);
+            index > -1 && store.splice(index, 1);
+          })(i, this[store]);
+        }
+
         this.register.trigger(this.name);
         return 'delete success';
       } catch (e) {

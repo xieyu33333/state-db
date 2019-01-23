@@ -1,7 +1,22 @@
-function sum(a, b) {
-  return a + b;
-}
+/*
+ * 测试schema功能是否符合预期
+ */
 
-test('adds 1 + 2 to equal 3', () => {
-  expect(sum(1, 2)).toBe(3);
-});
+import db from './init.js';
+
+db.createTable({
+    name: 'test_schema',
+    schema: {
+        id: { type: 'Number', required: true },
+        name: { type: 'String', required: true },
+        age: { type: 'Number', required: true },
+        todos: { type: 'Array', required: false },
+    },
+    pramaryKey: 'id',
+    initValue: [{
+        id: 1,
+        name: 'wang',
+        age: 11,
+        todos: []
+    }]
+})

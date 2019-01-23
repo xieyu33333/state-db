@@ -2,6 +2,7 @@
 
 - [为什么要做state-db](docs/为什么要做state-db.md)
 - [组件化开发真的是银弹么？](docs/组件化开发真的是银弹么.md)
+- [从时间旅行的乌托邦，看状态管理的设计误区](https://juejin.im/post/5a37075051882527a13d9418)
 
 ## API 文档
 
@@ -58,7 +59,7 @@ db.bindFn((changeInfo) => {
 })
 ```
 
-##### 监听表变化（增删查数据时）
+##### 监听表变化（增删改数据时）
 
 ```js
 articalTable.bindFn((changeInfo) => {
@@ -85,8 +86,19 @@ articalTable.where('line.name=="我的奋斗"').delete()
 
 ##### 改
 
+将查到的第一个值update
 ```js
 articalTable.where('line.id==1').update({name: "你的奋斗"});
+```
+
+将查到的全部值update成同一个值
+```js
+articalTable.where('line.id==1').updateAll({name: "你的奋斗"});
+```
+
+传入一个数组 和 一个key值，当遇到key值相等的行时进行update
+```js
+articalTable.updateByKey([{ id: 2, name: '奥特曼大战变形金刚' }, {id: 3, name: 'lee',}], 'id');
 ```
 
 ##### 查
