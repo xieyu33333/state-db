@@ -113,7 +113,7 @@ class DB {
     table = (name) => {
         const table = this[tables][name];
         if (!table) {
-            console.log('Can not find table ' + name);
+            this.opts.onError('Can not find table ' + name);
         }
         else {
             return table

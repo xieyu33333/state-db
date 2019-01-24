@@ -46,20 +46,22 @@ class Table {
             this.primaryKey = opts.primaryKey;
         }
         else if (isObj(opts.primaryKey)) {
-            this.primaryKey = primaryKey.name || 'key';
-            this.setPrimaryKey = (line, value) => {
-                let data = this[store];
-                let primaryKey = this.primaryKey;
-                if (!value) {
-                    if (data.length) {
-                        line[primaryKey] = data[data.length - 1][primaryKey] + 1;
+            this.primaryKey = opts.primaryKey.name || 'key';
+            if (opts.primaryKey.autoIncrement) {
+                this.setPrimaryKey = (line, value) => {
+                    let data = this[store];
+                    let primaryKey = this.primaryKey;
+                    if (!value) {
+                        if (data.length) {
+                            line[primaryKey] = data[data.length - 1][primaryKey] + 1;
+                        }
+                        else {
+                            line[primaryKey] = 1;
+                        }
                     }
                     else {
-                        line[primaryKey] = 1;
+                        line[primaryKey] = value;
                     }
-                }
-                else {
-                    line[primaryKey] = value;
                 }
             }
         }
@@ -220,17 +222,17 @@ class Table {
             this.setPrimaryKey(line);
             if (!isString(filterKey)) {
                 data.push(line);
-                return true;
+                return line[filterKey] || true;
             }
             else {
                 for (let i = 0; i < data.length; i++) {
                     if (data[i][filterKey] === line[filterKey]) {
                         data[i] = line;
-                        return true
+                        return line[filterKey] || true;
                     }
                 }
                 data.push(line);
-                return true
+                return line[filterKey] || true;
             }
         }
     }
@@ -238,22 +240,27 @@ class Table {
      * 插入一条或多条数据, 如果有key, 则可能进行update操作
      */
     insert = (item, key) => {
+        const keys = [];
         if (isObj(item)) {
             var line = this._beforeSave(item);
-            if (!this._insert(line, key)) {
+            var kv = this._insert(line, key)
+            if (!kv) {
                 this.dbOpts.onError('Insert item not match the schema.', item);
             }
             else {
                 this.register.trigger(this.name, {type: 'insert', count: 1, insertCount: 1});
                 this.dbOpts.onChange('Table ' + this.name + ' insert Success', this, 'init', item);
+                keys.push(kv);
             }
         }
         else if (isArray(item)) {
             var lines = this._beforeSave(item);
             var insertCount = 0;
             lines.forEach(line => {
-                if (this._insert(line, key)) {
+                var kv = this._insert(line, key)
+                if (kv) {
                     insertCount += 1;
+                    keys.push(kv);
                 }
             })
             if (insertCount) {
@@ -266,7 +273,8 @@ class Table {
         else {
             this.dbOpts.onError('Insert item type must be array or object', item);
         }
-        return this;
+        return keys;
+
     }
 
 
