@@ -11,6 +11,7 @@ var renderHTML = {
         const tableNames = info.tableNames;
         const tables = info.tables;
         const db = info.db;
+        const opts = methods.getOpts();
         const state = {
             query: '',
             tablename: 'all'
@@ -114,6 +115,10 @@ var renderHTML = {
             const $content = $('#state-db-devtool-content');
             const $tableSelector = $('#state-db-devtool-table-selector');
             const $refresh = $('#state-db-devtool-refresh');
+            //默认不展开
+            if (opts.hide) {
+                $content.style.display = 'none';
+            }
 
             $toggle.onclick = (e) => {
                 if (e.target === $toggle) {

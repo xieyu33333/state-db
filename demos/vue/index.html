@@ -19,7 +19,7 @@
     <script src="devtool.db.js"></script>
     <script>
         var db = new StateDB();
-        devtool(db, 'html');
+        devtool(db, 'html', {hide: true});
         var articalTable = db.createTable({
             name: 'artical',
             initValue: [

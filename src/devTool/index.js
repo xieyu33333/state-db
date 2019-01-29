@@ -3,8 +3,10 @@
  */
 import renderHTML from './render/renderHTML.js';
 import renderConsole from './render/renderConsole.js';
+import {isObj} from '../utils';
 
-export default (db, render="console") => {
+
+export default (db, render="console", opts={}) => {
     let renderer = {};
     if (render=="console") {
         renderer = renderConsole;
@@ -43,6 +45,15 @@ export default (db, render="console") => {
         }
     }
 
+    const getOpts = () => {
+        if (isObj(opts)) {
+            return opts;
+        }
+        else {
+            return {};
+        }
+    }
+
     const renderLine = (tablename, query) => {
         renderArr(db.table(tablename).where(query).getValues(), tablename);
     }
@@ -52,7 +63,8 @@ export default (db, render="console") => {
         renderAll,
         renderTable,
         renderLine,
-        getInfo
+        getInfo,
+        getOpts
     }
 
     renderer.injectPage(exportMethods);

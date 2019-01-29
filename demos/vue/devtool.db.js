@@ -18,6 +18,7 @@
         const tableNames = info.tableNames;
         const tables = info.tables;
         const db = info.db;
+        const opts = methods.getOpts();
         const state = {
           query: '',
           tablename: 'all'
@@ -116,7 +117,11 @@
           const $toggle = $('#state-db-devtool');
           const $content = $('#state-db-devtool-content');
           const $tableSelector = $('#state-db-devtool-table-selector');
-          const $refresh = $('#state-db-devtool-refresh');
+          const $refresh = $('#state-db-devtool-refresh'); //默认不展开
+
+          if (opts.hide) {
+            $content.style.display = 'none';
+          }
 
           $toggle.onclick = e => {
             if (e.target === $toggle) {
@@ -216,10 +221,12 @@
       renderItem: (line, tablename) => console.table(line)
     };
 
+    const isObj = v => Object.prototype.toString.call(v) === "[object Object]";
+
     /*
      * 接收一个db实例
      */
-    var index = ((db, render = "console") => {
+    var index = ((db, render = "console", opts = {}) => {
       let renderer = {};
 
       if (render == "console") {
@@ -260,6 +267,14 @@
         };
       };
 
+      const getOpts = () => {
+        if (isObj(opts)) {
+          return opts;
+        } else {
+          return {};
+        }
+      };
+
       const renderLine = (tablename, query) => {
         renderArr(db.table(tablename).where(query).getValues(), tablename);
       };
@@ -268,7 +283,8 @@
         renderAll,
         renderTable,
         renderLine,
-        getInfo
+        getInfo,
+        getOpts
       };
       renderer.injectPage(exportMethods);
       db.bindFn(() => {
