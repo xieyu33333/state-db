@@ -15,7 +15,7 @@ npm i state-db.js
 ##### 创建数据库实例
 
 ```js
-import DB from 'state-db';
+import DB from 'state-db.js';
 const db = new DB();
 ```
 
@@ -123,7 +123,7 @@ articalTable.last(3).getValues();
 import DB from 'state-db.js';
 import devtool from 'state-db.js/build/devtool.bundle.esm.js'; //引入devtool
 const db = new DB();
-devtool(db, 'html'); //第二个参数默认为console
+devtool(db, 'html', {hide: true}); //第二个参数默认为console
 export default db;
 ```
 ![](https://fe-learn-react.oss-cn-beijing.aliyuncs.com/%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_07accb65-ecae-4eca-8854-72f0909a2c3e.png)
@@ -173,6 +173,10 @@ new Vue({
   mixins: [db.dbconnectVue('artical')],
   //... your own logic
 })
+
+//全局模式，
+//不传参数表示监听所有表(在mixin之前)
+Vue.mixin(db.dbconnectVue())
 ```
 
 

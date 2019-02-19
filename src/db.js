@@ -61,6 +61,9 @@ class DB {
         }
     }
 
+    /*
+     * forceUpdate不能触发子组件渲染，此处和react不同。
+     */
     dbconnectVue = (...args) => {
         var fnList = [];
         var self = this;
@@ -80,6 +83,15 @@ class DB {
                         }
                     });
                 }
+                else {
+                    //如果不传参，开启监听所有表
+                    for (let i in self[tables]) {
+                        var table = self[tables][i]
+                        table.bindFn(this._state_db_update_fn);
+                        fnList.push({table: table, fn: this._state_db_update_fn});
+                    }
+                }
+                self.bindFn(this._state_db_update_fn);
             },
 
             beforeDestroy: function() {
@@ -89,6 +101,7 @@ class DB {
             }
         }
     }
+
 
     createTable = (opts) => {
         if (!isObj(opts)) {

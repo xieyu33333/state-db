@@ -528,6 +528,16 @@
                   });
                 }
               });
+            } else {
+              //如果不传参，开启监听所有表
+              for (let i in self[tables]) {
+                var table = self[tables][i];
+                table.bindFn(this._state_db_update_fn);
+                fnList.push({
+                  table: table,
+                  fn: this._state_db_update_fn
+                });
+              }
             }
           },
           beforeDestroy: function () {

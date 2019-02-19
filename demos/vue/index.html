@@ -9,8 +9,10 @@
         <button v-on:click="addArtical">添加文章</button>
         <button v-on:click="addTest">添加test</button>
         <ul>
+            <last></last>
             <li v-for="artical in getArticals()">
-                {{ artical.title }}
+                <item>{{ artical.title }}</item>
+                <item-props :title="artical.title"></item-props>
             </li>
         </ul>
     </div>
@@ -27,18 +29,42 @@
             ]
         });
 
+        const addArtical = () => {
+            articalTable.insert({
+                title: "随机书籍" +  Math.random(),
+                author: "随机作者" + Math.random(),
+                content: "lalala"
+            })
+        }
+
+        Vue.component('item', {
+            template: '<p><slot></slot></p>',
+        })
+
+        const itemProps = Vue.component('item-props', {
+            props: ['title'],
+            template: '<p>{{title}}</p>',
+        })
+
+        Vue.component('last', {
+            mixins: [db.dbconnectVue('artical')],
+            components: [{'item-props': itemProps}],
+            template: '<p>{{getLast()}}</p><item-props :title="1111"></item-props>',
+            methods: {
+                getLast:() => {
+                    return articalTable.last(1).getValues()[0].title;
+                }
+            }
+        })
 
         new Vue({
             mixins: [db.dbconnectVue('artical')],
             el: '#app',
+            // components: [Item],
             //我们的目标是消灭组件中的data, 完全用数据库代替。
             methods: {
                 addArtical: () => {
-                    articalTable.insert({
-                        title: "随机书籍" +  Math.random(),
-                        author: "随机作者" + Math.random(),
-                        content: "lalala"
-                    })
+                    addArtical();
                 },
 
                 addTest: () => {
