@@ -539,6 +539,8 @@
                 });
               }
             }
+
+            self.bindFn(this._state_db_update_fn);
           },
           beforeDestroy: function () {
             fnList.forEach(fnMap => {
