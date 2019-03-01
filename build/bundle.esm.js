@@ -501,7 +501,6 @@ class DB {
     });
 
     _defineProperty(this, "dbconnectVue", (...args) => {
-      var fnList = [];
       var self = this;
       return {
         methods: {
@@ -510,13 +509,15 @@ class DB {
           }
         },
         created: function () {
+          this.fnList = [];
+
           if (args.length) {
             args.forEach(tableName => {
               var table = isString(tableName) ? self.table(tableName) : tableName;
 
               if (table) {
                 table.bindFn(this._state_db_update_fn);
-                fnList.push({
+                this.fnList.push({
                   table: table,
                   fn: this._state_db_update_fn
                 });
@@ -527,7 +528,7 @@ class DB {
             for (let i in self[tables]) {
               var table = self[tables][i];
               table.bindFn(this._state_db_update_fn);
-              fnList.push({
+              this.fnList.push({
                 table: table,
                 fn: this._state_db_update_fn
               });
@@ -537,7 +538,7 @@ class DB {
           self.bindFn(this._state_db_update_fn);
         },
         beforeDestroy: function () {
-          fnList.forEach(fnMap => {
+          this.fnList.forEach(fnMap => {
             fnMap.table.unbindFn(fnMap.fn);
           });
         }
