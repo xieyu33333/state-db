@@ -107,8 +107,11 @@ articalTable.updateByKey([{ id: 2, name: '奥特曼大战变形金刚' }, {id: 3
 //指定条件的值
 //getValues()保证每次取出的都是全新的对象，values则会使用缓存,和上次同一个查询使用同样的对象，使用values性能更好，使用getValues()更安全。
 //只要进行过增删改操作，缓存都会清空。
-articalTable.where('line.name=="我的奋斗 && index !== 1"').getValues();
-articalTable.where('line.name=="我的奋斗 && index !== 1"').values;
+articalTable.where('line.name=="我的奋斗 && index !== 1"').getValues(); //值是原值，后续操作不安全，仅能用于展示
+articalTable.where('line.name=="我的奋斗 && index !== 1"').values; //值是原值，后续操作不安全，仅能用于展示
+
+articalTable.where('line.name=="我的奋斗 && index !== 1"').getValues('safe'); //值是深copy出来的，后续操作是安全的。
+
 
 
 //查前三个
