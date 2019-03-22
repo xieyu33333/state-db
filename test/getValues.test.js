@@ -47,5 +47,13 @@ test('get name = test1  use values', () => {
     expect(arr[0].name).toBe("test1");
     expect(arr1.length).toBe(1);
     expect(arr1[0].name).toBe("test1");
+
+    test1Table.insert({
+        name: 'test1',
+        age: 11
+    });
+    var arr3 = test1Table.where('line.name=="test1"').values;
+    expect(arr3.length).toBe(2);
+    expect(arr3[0].name).toBe("test1");
 });
 
