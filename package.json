@@ -1,11 +1,11 @@
 {
   "name": "state-db.js",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "state management",
   "main": "build/bundle.js",
   "module": "build/bundle.esm.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --coverage",
     "build": "rollup -c",
     "watch": "rollup -c -w",
     "dev": "npm-run-all --parallel start watch",

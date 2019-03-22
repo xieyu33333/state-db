@@ -11,11 +11,11 @@ test('get name = test1', () => {
 });
 
 
-test('change arr not change db', () => {
-    var arr = test1Table.where('line.name=="test1"').getValues();
+test('change arr not change db & use safe Mode', () => {
+    var arr = test1Table.where('line.name=="test1"').getValues('safe');
     arr[0].name = 'aaa';
 
-    var arr1 = test1Table.where('line.name=="aaa"').getValues();
+    var arr1 = test1Table.where('line.name=="aaa"').getValues('safe');
     expect(arr1.length).toBe(0);
     // expect(arr[0].name).toBe("test1");
 });
@@ -38,5 +38,14 @@ test('get last 2 value use values', () => {
     var arr = test1Table.last(2).values;
     expect(arr.length).toBe(2);
     expect(arr[1].name).toBe("test3");
+});
+
+test('get name = test1  use values', () => {
+    var arr = test1Table.where('line.name=="test1"').values;
+    var arr1 = test1Table.where('line.name=="test1"').values;
+    expect(arr.length).toBe(1);
+    expect(arr[0].name).toBe("test1");
+    expect(arr1.length).toBe(1);
+    expect(arr1[0].name).toBe("test1");
 });
 

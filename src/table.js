@@ -110,9 +110,8 @@ class Table {
         /*
          * 将当前query缓存一下，下次操作被覆盖
          */
-        this.currentQuery = {
-            query: query.trim(),
-        }
+        this.currentQuery = query.trim();
+
         return this;
     }
 
@@ -152,15 +151,19 @@ class Table {
     /*
      * 返回查找到的数组，不使用缓存
      */
-    getValues = () => {
+    getValues = (type) => {
         let result = this[tmp];
         this[tmp] = this[store];
-
-        return JSON.parse(JSON.stringify(result));
+        if ( type === 'safe') {
+            return JSON.parse(JSON.stringify(result));
+        }
+        else if (!type || type === 'unsafe' || type === 'view'){
+            return result;
+        }
     }
 
     /*
-     * 返回查找到的数组, 并且会使用缓存
+     * 返回查找到的数组, 并且会使用缓存, 因为主要用于快速取值，所采用unsafe模式，需注意
      */
     get values() {
         let result = this[tmp];
@@ -171,10 +174,10 @@ class Table {
         const cacheValue = this.queryCache[this.currentQuery];
 
         if (cacheValue) {
-            return cacheValue
+            return cacheValue;
         }
         else {
-            this.queryCache[this.currentQuery] = JSON.parse(JSON.stringify(result));
+            this.queryCache[this.currentQuery] = result;
             return this.queryCache[this.currentQuery];
         }
     }

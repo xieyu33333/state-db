@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/db.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">All files</a> / <a href="index.html">src</a> db.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">21.33% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>16/75</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">13.79% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>4/29</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">11.11% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>3/27</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">21.62% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>16/74</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line low'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {isArray, isObj, isFunction, isString} from './utils';
+import Table from './table';
+import Observer from './observer';
+&nbsp;
+const tables = Symbol('tables');
+&nbsp;
+const defaultOpts = {
+    onError : <span class="fstat-no" title="function not covered" >(e</span>rr, passData) =&gt; <span class="cstat-no" title="statement not covered" >console.error(err, passData),</span>
+    onMessage : <span class="fstat-no" title="function not covered" >(m</span>sg, data) =&gt; <span class="cstat-no" title="statement not covered" >console.log(msg, data),</span>
+    onChange : <span class="fstat-no" title="function not covered" >(m</span>sg, table, type, data) =&gt; <span class="cstat-no" title="statement not covered" >console.log(msg, table, type, data),</span>
+    onQuery : <span class="fstat-no" title="function not covered" >(m</span>sg, table, query, data) =&gt; <span class="cstat-no" title="statement not covered" >console.log(msg, table, query, data)</span>
+}
+&nbsp;
+class DB {
+    constructor(opts = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+        this[tables] = {};
+        this.opts = Object.assign(defaultOpts, opts);
+        this.register = new Observer();
+    }
+&nbsp;
+    // 快速关联db和react组件的高阶组件 @db.dbconnectReact(table1, table2, table3)
+    dbconnectReact = <span class="fstat-no" title="function not covered" >(.</span>..args) =&gt; {
+        var self = <span class="cstat-no" title="statement not covered" >this;</span>
+<span class="cstat-no" title="statement not covered" >        return <span class="fstat-no" title="function not covered" >ta</span>rget =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            return class Inheritance extends target {</span>
+<span class="fstat-no" title="function not covered" >                co</span>nstructor(props) {
+<span class="cstat-no" title="statement not covered" >                    super(props);</span>
+<span class="cstat-no" title="statement not covered" >                    this.fnList = [];</span>
+<span class="cstat-no" title="statement not covered" >                    this.args = args;</span>
+<span class="cstat-no" title="statement not covered" >                    this.bindTable = <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                        if (this.args.length) {</span>
+<span class="cstat-no" title="statement not covered" >                            this.args.forEach(<span class="fstat-no" title="function not covered" >ta</span>bleName =&gt; {</span>
+                                var fn = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >this.setState({});</span></span>
+                                var table = <span class="cstat-no" title="statement not covered" >isString(tableName) ? self.table(tableName) : tableName;</span>
+<span class="cstat-no" title="statement not covered" >                                if (table) {</span>
+<span class="cstat-no" title="statement not covered" >                                    table.bindFn(fn);</span>
+<span class="cstat-no" title="statement not covered" >                                    this.fnList.push({table: table, fn: fn})</span>
+                                }
+                            });
+<span class="cstat-no" title="statement not covered" >                            if (this.args.length === this.fnList.length) {</span>
+<span class="cstat-no" title="statement not covered" >                                this.binded = true;</span>
+                            }
+                        }
+                    }
+<span class="cstat-no" title="statement not covered" >                    this.bindTable();</span>
+                }
+&nbsp;
+                componentWillMount = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >                    super.componentWillMount &amp;&amp; super.componentWillMount();</span>
+                    //如果在构造器阶段未绑定成功，在runtime阶段再绑定一次
+<span class="cstat-no" title="statement not covered" >                    !this.binded &amp;&amp; this.bindTable()</span>
+                }
+&nbsp;
+                componentWillUnmount = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >                    super.componentWillUnmount &amp;&amp; super.componentWillUnmount();</span>
+<span class="cstat-no" title="statement not covered" >                    this.fnList.forEach(<span class="fstat-no" title="function not covered" >fn</span>Map =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                        fnMap.table.unbindFn(fnMap.fn);</span>
+                    });
+                }
+            }
+        }
+    }
+&nbsp;
+    /*
+     * forceUpdate不能触发子组件渲染，此处和react不同。
+     */
+    dbconnectVue = <span class="fstat-no" title="function not covered" >(.</span>..args) =&gt; {
+        var self = <span class="cstat-no" title="statement not covered" >this;</span>
+<span class="cstat-no" title="statement not covered" >        return {</span>
+            methods: {
+                _state_db_update_fn: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+<span class="cstat-no" title="statement not covered" >                    this.$forceUpdate();</span>
+                }
+            },
+            created: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+<span class="cstat-no" title="statement not covered" >                this.fnList = [];</span>
+<span class="cstat-no" title="statement not covered" >                if (args.length) {</span>
+<span class="cstat-no" title="statement not covered" >                    args.forEach(<span class="fstat-no" title="function not covered" >ta</span>bleName =&gt; {</span>
+                        var table = <span class="cstat-no" title="statement not covered" >isString(tableName) ? self.table(tableName) : tableName;</span>
+<span class="cstat-no" title="statement not covered" >                        if (table) {</span>
+<span class="cstat-no" title="statement not covered" >                            table.bindFn(this._state_db_update_fn);</span>
+<span class="cstat-no" title="statement not covered" >                            this.fnList.push({table: table, fn: this._state_db_update_fn})</span>
+                        }
+                    });
+                }
+                else {
+                    //如果不传参，开启监听所有表
+<span class="cstat-no" title="statement not covered" >                    for (let i in self[tables]) {</span>
+                        var table = <span class="cstat-no" title="statement not covered" >self[tables][i]</span>
+<span class="cstat-no" title="statement not covered" >                        table.bindFn(this._state_db_update_fn);</span>
+<span class="cstat-no" title="statement not covered" >                        this.fnList.push({table: table, fn: this._state_db_update_fn});</span>
+                    }
+                }
+<span class="cstat-no" title="statement not covered" >                self.bindFn(this._state_db_update_fn);</span>
+            },
+&nbsp;
+            beforeDestroy: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+<span class="cstat-no" title="statement not covered" >                this.fnList.forEach(<span class="fstat-no" title="function not covered" >fn</span>Map =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    fnMap.table.unbindFn(fnMap.fn);</span>
+                });
+            }
+        }
+    }
+&nbsp;
+&nbsp;
+    createTable = (opts) =&gt; {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!isObj(opts)) {
+<span class="cstat-no" title="statement not covered" >            this.opts.onError('createTable must pass in an Object', opts);</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!opts.name) {
+<span class="cstat-no" title="statement not covered" >            this.opts.onError('opts.name is required', opts);</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (this[tables][opts.name]) {
+<span class="cstat-no" title="statement not covered" >            this.opts.onError('opts.name are already exists', opts);</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+        opts.dbOpts = this.opts
+        const table = new Table(opts);
+        this[tables][opts.name] = table;
+        this.register.trigger('db_event', Object.assign(opts, {type: 'create_table'}));
+        return table;
+    }
+&nbsp;
+    table = (name) =&gt; {
+        const table = this[tables][name];
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!table) {
+<span class="cstat-no" title="statement not covered" >            this.opts.onError('Can not find table ' + name);</span>
+        }
+        else {
+            return table
+        }
+&nbsp;
+    }
+&nbsp;
+    getTables = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >        return this[tables];</span>
+    }
+&nbsp;
+    drop = <span class="fstat-no" title="function not covered" >(n</span>ame) =&gt; {
+<span class="cstat-no" title="statement not covered" >        delete this[tables][name];</span>
+<span class="cstat-no" title="statement not covered" >        this.register.trigger('db_event', {tablename: name, type: 'drop_table'});</span>
+    }
+&nbsp;
+    clear = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >        for (let i in this[tables]) {</span>
+<span class="cstat-no" title="statement not covered" >            delete this[tables][i];</span>
+        }
+<span class="cstat-no" title="statement not covered" >        this.register.trigger('db_event', {type: 'clear'});</span>
+    }
+&nbsp;
+    bindFn = <span class="fstat-no" title="function not covered" >(f</span>n) =&gt; {
+<span class="cstat-no" title="statement not covered" >        this.register.on('db_event', fn);</span>
+    }
+&nbsp;
+    unbindFn = <span class="fstat-no" title="function not covered" >(f</span>n) =&gt; {
+<span class="cstat-no" title="statement not covered" >        this.register.off('db_event', fn);</span>
+    }
+}
+&nbsp;
+export default DB;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Mar 22 2019 11:54:44 GMT+0800 (GMT+08:00)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
