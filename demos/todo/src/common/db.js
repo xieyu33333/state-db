@@ -174,7 +174,8 @@ class Table {
         } else {
           for (let i = 0; i < data.length; i++) {
             if (data[i][filterKey] === line[filterKey]) {
-              data[i] = line;
+              // data[i] = line;
+              Object.keys(line).forEach(key => data[i][key] = line[key]);
               return line[filterKey] || true;
             }
           }
