@@ -1,4 +1,4 @@
-import DB from '../src/db.js';
+import DB from '../build/bundle.esm.js';
 const db = new DB({
     onError : (err, passData) => false,
     onMessage : (msg) => false,
