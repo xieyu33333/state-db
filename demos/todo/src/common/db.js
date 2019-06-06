@@ -80,6 +80,12 @@ const tmp = Symbol('tmp');
 
 class Table {
   constructor(opts = {}) {
+    _defineProperty(this, "_commonOnChange", message => {
+      this.version++;
+      this[tmp] = this[store];
+      this.register.trigger(this.name, message);
+    });
+
     _defineProperty(this, "where", query => {
       this[tmp] = this[store].filter((line, index) => {
         return eval(query);
@@ -93,15 +99,58 @@ class Table {
     });
 
     _defineProperty(this, "first", n => {
-      this[tmp] = this[store].filter((line, index) => {
+      this[tmp] = this[tmp].filter((line, index) => {
         return index < n;
       });
       return this;
     });
 
     _defineProperty(this, "last", n => {
-      this[tmp] = this[store].filter((line, index) => {
+      this[tmp] = this[tmp].filter((line, index) => {
         return index > this[store].length - n - 1;
+      });
+      return this;
+    });
+
+    _defineProperty(this, "eq", (k, v) => {
+      this[tmp] = this[tmp].filter((line, index) => {
+        return line[k] === v;
+      });
+      return this;
+    });
+
+    _defineProperty(this, "in", (k, arr) => {
+      this[tmp] = this[tmp].filter((line, index) => {
+        return arr.indexOf(line[k]) > -1;
+      });
+      return this;
+    });
+
+    _defineProperty(this, "filter", (k, compare, v) => {
+      this[tmp] = this[tmp].filter((line, index) => {
+        if (compare === '===') {
+          return line[k] === v;
+        }
+
+        if (compare === '===') {
+          return line[k] === v;
+        }
+
+        if (compare === '>=') {
+          return line[k] >= v;
+        }
+
+        if (compare === '<=') {
+          return line[k] <= v;
+        }
+
+        if (compare === '>') {
+          return line[k] > v;
+        }
+
+        if (compare === '<') {
+          return line[k] < v;
+        }
       });
       return this;
     });
@@ -155,7 +204,9 @@ class Table {
           this[store].push(item);
         }
       });
-      this.register.trigger(this.name); //触发更新广播
+
+      this._commonOnChange(); //触发更新广播
+
 
       this.dbOpts.onChange('Table ' + this.name + ' init Success', this, 'init', lines);
       return this;
@@ -219,7 +270,7 @@ class Table {
         });
 
         if (insertCount) {
-          this.register.trigger(this.name, {
+          this._commonOnChange({
             type: 'insert',
             count: item.length,
             insertCount: insertCount
@@ -242,9 +293,11 @@ class Table {
 
       if (result[0]) {
         Object.keys(obj).forEach(key => result[0][key] = obj[key]);
-        this.register.trigger(this.name, {
+
+        this._commonOnChange({
           type: 'update'
         });
+
         return 'update success';
       } else {
         return 'Not Find Update Target.';
@@ -260,9 +313,11 @@ class Table {
       result.forEach(item => {
         Object.keys(obj).forEach(key => item[key] = obj[key]);
       });
-      this.register.trigger(this.name, {
+
+      this._commonOnChange({
         type: 'update'
       });
+
       return 'update success';
     });
 
@@ -278,9 +333,11 @@ class Table {
       var arr = this._beforeSave(arr);
 
       result.forEach(line => Object.assign(line, arr.find(item => item[key] == line[key])));
-      this.register.trigger(this.name, {
+
+      this._commonOnChange({
         type: 'update'
       });
+
       return 'updateByKey success';
     });
 
@@ -296,7 +353,10 @@ class Table {
           })(i, this[store]);
         }
 
-        this.register.trigger(this.name);
+        this._commonOnChange({
+          type: 'delete'
+        });
+
         return 'delete success';
       } catch (e) {
         console.log(e);
@@ -331,6 +391,7 @@ class Table {
     this[store] = [];
     this.name = opts.name;
     this.dbOpts = opts.dbOpts || {};
+    this.version = 0;
 
     this.setPrimaryKey = () => {};
 
@@ -409,10 +470,6 @@ class Table {
 
     this[tmp] = this[store];
   }
-  /*
-   * 支持链式调用，但不支持多个where链式调用
-   */
-
 
   /*
    * 返回查找到的数组, 并且会使用缓存, 因为主要用于快速取值，所采用unsafe模式，需注意
@@ -445,7 +502,8 @@ const defaultOpts = {
   onError: (err, passData) => console.error(err, passData),
   onMessage: (msg, data) => console.log(msg, data),
   onChange: (msg, table, type, data) => console.log(msg, table, type, data),
-  onQuery: (msg, table, query, data) => console.log(msg, table, query, data)
+  onQuery: (msg, table, query, data) => console.log(msg, table, query, data),
+  vueUpdateTimeout: 200
 };
 
 class DB {
@@ -506,14 +564,23 @@ class DB {
 
     _defineProperty(this, "dbconnectVue", (...args) => {
       var self = this;
+      var timeout = self.opts.vueUpdateTimeout || 200;
       return {
         methods: {
           _state_db_update_fn: function () {
-            this.$forceUpdate();
+            //100ms内触发的update复用同一个$forceUpdate()
+            if (!this.updateFlag) {
+              this.updateFlag = 1;
+              setTimeout(() => {
+                this.$forceUpdate();
+                this.updateFlag = 0;
+              }, timeout);
+            }
           }
         },
         created: function () {
           this.fnList = [];
+          this.updateFlag = 0;
 
           if (args.length) {
             args.forEach(tableName => {
@@ -604,6 +671,12 @@ class DB {
       this.register.trigger('db_event', {
         type: 'clear'
       });
+    });
+
+    _defineProperty(this, "transaction", () => {
+      /*
+       * 事务机制
+       */
     });
 
     _defineProperty(this, "bindFn", fn => {

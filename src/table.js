@@ -24,6 +24,7 @@ class Table {
         this[store] = [];
         this.name = opts.name;
         this.dbOpts = opts.dbOpts || {};
+        this.version = 0;
         this.setPrimaryKey = () => {};
         this.checkschema = () => true;
         if (isObj(this.schema)) {
@@ -100,6 +101,12 @@ class Table {
         this[tmp] = this[store];
     }
 
+    _commonOnChange = (message) => {
+        this.version++;
+        this[tmp] = this[store];
+        this.register.trigger(this.name, message);
+    }
+
     /*
      * 支持链式调用，但不支持多个where链式调用
      */
@@ -116,15 +123,53 @@ class Table {
     }
 
     first = (n) => {
-        this[tmp] = this[store].filter((line, index) => {
+        this[tmp] = this[tmp].filter((line, index) => {
             return index < n;
         })
         return this;
     }
 
     last = (n) => {
-        this[tmp] = this[store].filter((line, index) => {
+        this[tmp] = this[tmp].filter((line, index) => {
             return index > this[store].length - n - 1;
+        })
+        return this;
+    }
+
+    eq = (k, v) => {
+        this[tmp] = this[tmp].filter((line, index) => {
+            return line[k] === v;
+        })
+        return this;
+    }
+
+    in = (k, arr) => {
+        this[tmp] = this[tmp].filter((line, index) => {
+            return arr.indexOf(line[k]) > -1;
+        })
+        return this;
+    }
+
+    filter = (k, compare, v) => {
+        this[tmp] = this[tmp].filter((line, index) => {
+            if (compare === '==='){
+                return line[k] === v;
+            }
+            if (compare === '==='){
+                return line[k] === v;
+            }
+            if (compare === '>='){
+                return line[k] >= v;
+            }
+            if (compare === '<='){
+                return line[k] <= v;
+            }
+            if (compare === '>'){
+                return line[k] > v;
+            }
+            if (compare === '<'){
+                return line[k] < v;
+            }
         })
         return this;
     }
@@ -210,7 +255,7 @@ class Table {
                 this[store].push(item);
             }
         });
-        this.register.trigger(this.name); //触发更新广播
+        this._commonOnChange(); //触发更新广播
         this.dbOpts.onChange('Table ' + this.name + ' init Success', this, 'init', lines);
         return this;
     }
@@ -268,7 +313,7 @@ class Table {
                 }
             })
             if (insertCount) {
-                this.register.trigger(this.name, {type: 'insert', count: item.length, insertCount: insertCount});
+                this._commonOnChange({type: 'insert', count: item.length, insertCount: insertCount})
             }
             else {
                 this.dbOpts.onError('All Insert item not match the schema.', item);
@@ -291,8 +336,8 @@ class Table {
         var obj = this._beforeSave(obj);
 
         if (result[0]) {
-            Object.keys(obj).forEach(key => result[0][key] = obj[key])
-            this.register.trigger(this.name, {type: 'update'});
+            Object.keys(obj).forEach(key => result[0][key] = obj[key]);
+            this._commonOnChange({type: 'update'});
             return 'update success';
         }
         else {
@@ -310,8 +355,8 @@ class Table {
 
         result.forEach(item => {
             Object.keys(obj).forEach(key => item[key] = obj[key])
-        })
-        this.register.trigger(this.name, {type: 'update'});
+        });
+        this._commonOnChange({type: 'update'});
         return 'update success';
 
     }
@@ -330,7 +375,7 @@ class Table {
 
         result.forEach(line => Object.assign(line, arr.find(item => item[key] == line[key])));
 
-        this.register.trigger(this.name, {type: 'update'});
+        this._commonOnChange({type: 'update'});
         return 'updateByKey success';
     }
 
@@ -351,7 +396,7 @@ class Table {
                 })(i, this[store])
             }
 
-            this.register.trigger(this.name);
+            this._commonOnChange({type: 'delete'})
             return 'delete success';
         } catch(e) {
             console.log(e);

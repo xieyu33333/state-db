@@ -20,6 +20,12 @@ test('change arr not change db & use safe Mode', () => {
     // expect(arr[0].name).toBe("test1");
 });
 
+test('key in Arr', () => {
+    var arr = test1Table.in('name', ['test1', 'test3']).getValues();
+    expect(arr.length).toBe(2);
+    expect(arr[1].name).toBe("test3");
+});
+
 
 test('get first 2 value', () => {
     var arr = test1Table.first(2).getValues();
@@ -56,4 +62,6 @@ test('get name = test1  use values', () => {
     expect(arr3.length).toBe(2);
     expect(arr3[0].name).toBe("test1");
 });
+
+
 

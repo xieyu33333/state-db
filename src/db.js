@@ -1,4 +1,4 @@
-import {isArray, isObj, isFunction, isString} from './utils';
+import {isArray, isObj, isFunction, isString, isNumber} from './utils';
 import Table from './table';
 import Observer from './observer';
 
@@ -8,7 +8,8 @@ const defaultOpts = {
     onError : (err, passData) => console.error(err, passData),
     onMessage : (msg, data) => console.log(msg, data),
     onChange : (msg, table, type, data) => console.log(msg, table, type, data),
-    onQuery : (msg, table, query, data) => console.log(msg, table, query, data)
+    onQuery : (msg, table, query, data) => console.log(msg, table, query, data),
+    vueUpdateTimeout: 200
 }
 
 class DB {
@@ -66,14 +67,23 @@ class DB {
      */
     dbconnectVue = (...args) => {
         var self = this;
+        var timeout = self.opts.vueUpdateTimeout || 200;
         return {
             methods: {
                 _state_db_update_fn: function() {
-                    this.$forceUpdate();
+                    //100ms内触发的update复用同一个$forceUpdate()
+                    if (!this.updateFlag) {
+                        this.updateFlag = 1;
+                        setTimeout(() => {
+                            this.$forceUpdate();
+                            this.updateFlag = 0;
+                        }, timeout);
+                    }
                 }
             },
             created: function() {
                 this.fnList = [];
+                this.updateFlag = 0;
                 if (args.length) {
                     args.forEach(tableName => {
                         var table = isString(tableName) ? self.table(tableName) : tableName;
@@ -148,6 +158,12 @@ class DB {
             delete this[tables][i];
         }
         this.register.trigger('db_event', {type: 'clear'});
+    }
+
+    transaction = () => {
+        /*
+         * 事务机制
+         */
     }
 
     bindFn = (fn) => {
