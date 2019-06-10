@@ -102,6 +102,7 @@ articalTable.updateByKey([{ id: 2, name: '奥特曼大战变形金刚' }, {id: 3
 ```
 
 ##### 查
+注意：where语句由于底层使用了eval，对性能有影响，因此在循环中需要慎用,可以使用eq， filter， in等语句进行代替。
 
 ```js
 //指定条件的值
@@ -118,6 +119,15 @@ articalTable.where('line.name=="我的奋斗 && index !== 1"').getValues('safe')
 articalTable.first(3).getValues();
 //查后三个
 articalTable.last(3).getValues();
+
+//查name === "我的奋斗"
+articalTable.eq('name', "我的奋斗").getValues();
+
+//查id >= 3 && age <= 10
+articalTable.filter('id', ">=", 3).filter('age', "<=", 10).getValues();
+
+//查name=='test1' or name=='test3'
+var arr = test1Table.in('name', ['test1', 'test3']).getValues();
 ```
 
 ## 辅助工具
