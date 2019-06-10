@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">65.99% </span>
+        <span class="strong">64.87% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>229/347</span>
+        <span class='fraction'>229/353</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">46.54% </span>
+        <span class="strong">45.4% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>74/159</span>
+        <span class='fraction'>74/163</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">61.45% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>51/83</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">65.18% </span>
+        <span class="strong">64.04% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>219/336</span>
+        <span class='fraction'>219/342</span>
       </div>
     </div>
   </div>
@@ -742,7 +742,19 @@
 697
 698
 699
-700</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+700
+701
+702
+703
+704
+705
+706
+707
+708
+709
+710
+711
+712</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">380x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -874,6 +886,14 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1318,7 +1338,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1593,6 +1617,14 @@ class Table {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (compare === '&lt;') {</span>
 <span class="cstat-no" title="statement not covered" >          return line[k] &lt; v;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (compare === '!==') {</span>
+<span class="cstat-no" title="statement not covered" >          return line[k] !== v;</span>
+        }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (compare === '!=') {</span>
+<span class="cstat-no" title="statement not covered" >          return line[k] != v;</span>
         }
       });
       return this;
@@ -1946,7 +1978,7 @@ const defaultOpts = {
   onMessage: <span class="fstat-no" title="function not covered" >(m</span>sg, data) =&gt; <span class="cstat-no" title="statement not covered" >console.log(msg, data),</span>
   onChange: <span class="fstat-no" title="function not covered" >(m</span>sg, table, type, data) =&gt; <span class="cstat-no" title="statement not covered" >console.log(msg, table, type, data),</span>
   onQuery: <span class="fstat-no" title="function not covered" >(m</span>sg, table, query, data) =&gt; <span class="cstat-no" title="statement not covered" >console.log(msg, table, query, data),</span>
-  vueUpdateTimeout: 200
+  vueUpdateTimeout: 0
 };
 &nbsp;
 class DB {
@@ -2007,17 +2039,21 @@ class DB {
 &nbsp;
     _defineProperty(this, "dbconnectVue", <span class="fstat-no" title="function not covered" >(.</span>..args) =&gt; {
       var self = <span class="cstat-no" title="statement not covered" >this;</span>
-      var timeout = <span class="cstat-no" title="statement not covered" >self.opts.vueUpdateTimeout || 200;</span>
+      var timeout = <span class="cstat-no" title="statement not covered" >self.opts.vueUpdateTimeout;</span>
 <span class="cstat-no" title="statement not covered" >      return {</span>
         methods: {
           _state_db_update_fn: <span class="fstat-no" title="function not covered" >fu</span>nction () {
             //100ms内触发的update复用同一个$forceUpdate()
-<span class="cstat-no" title="statement not covered" >            if (!this.updateFlag) {</span>
-<span class="cstat-no" title="statement not covered" >              this.updateFlag = 1;</span>
-<span class="cstat-no" title="statement not covered" >              setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                this.$forceUpdate();</span>
-<span class="cstat-no" title="statement not covered" >                this.updateFlag = 0;</span>
-              }, timeout);
+<span class="cstat-no" title="statement not covered" >            if (timeout) {</span>
+<span class="cstat-no" title="statement not covered" >              if (!this.updateFlag) {</span>
+<span class="cstat-no" title="statement not covered" >                this.updateFlag = 1;</span>
+<span class="cstat-no" title="statement not covered" >                setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                  this.$forceUpdate();</span>
+<span class="cstat-no" title="statement not covered" >                  this.updateFlag = 0;</span>
+                }, timeout);
+              }
+            } else {
+<span class="cstat-no" title="statement not covered" >              this.$forceUpdate();</span>
             }
           }
         },
@@ -2146,7 +2182,7 @@ export default DB;
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Thu Jun 06 2019 15:13:32 GMT+0800 (GMT+08:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Jun 10 2019 11:38:37 GMT+0800 (GMT+08:00)
 </div>
 </div>
 <script src="../prettify.js"></script>

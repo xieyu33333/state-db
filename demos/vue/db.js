@@ -157,6 +157,14 @@
           if (compare === '<') {
             return line[k] < v;
           }
+
+          if (compare === '!==') {
+            return line[k] !== v;
+          }
+
+          if (compare === '!=') {
+            return line[k] != v;
+          }
         });
         return this;
       });
@@ -509,7 +517,7 @@
     onMessage: (msg, data) => console.log(msg, data),
     onChange: (msg, table, type, data) => console.log(msg, table, type, data),
     onQuery: (msg, table, query, data) => console.log(msg, table, query, data),
-    vueUpdateTimeout: 200
+    vueUpdateTimeout: 0
   };
 
   class DB {
@@ -570,17 +578,21 @@
 
       _defineProperty(this, "dbconnectVue", (...args) => {
         var self = this;
-        var timeout = self.opts.vueUpdateTimeout || 200;
+        var timeout = self.opts.vueUpdateTimeout;
         return {
           methods: {
             _state_db_update_fn: function () {
               //100ms内触发的update复用同一个$forceUpdate()
-              if (!this.updateFlag) {
-                this.updateFlag = 1;
-                setTimeout(() => {
-                  this.$forceUpdate();
-                  this.updateFlag = 0;
-                }, timeout);
+              if (timeout) {
+                if (!this.updateFlag) {
+                  this.updateFlag = 1;
+                  setTimeout(() => {
+                    this.$forceUpdate();
+                    this.updateFlag = 0;
+                  }, timeout);
+                }
+              } else {
+                this.$forceUpdate();
               }
             }
           },
