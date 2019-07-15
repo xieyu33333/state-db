@@ -155,8 +155,8 @@ class Table {
             if (compare === '==='){
                 return line[k] === v;
             }
-            if (compare === '==='){
-                return line[k] === v;
+            if (compare === '=='){
+                return line[k] == v;
             }
             if (compare === '>='){
                 return line[k] >= v;
